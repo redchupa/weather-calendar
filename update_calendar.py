@@ -604,11 +604,20 @@ def fetch_air_forecast(now):
             print(f"[WARN] 에어코리아 {code} 요청 실패: {e}")
             continue
         items = (data.get('response', {}).get('body', {}) or {}).get('items') or []
+        if not items:
+            print(f"[DIAG] 에어코리아 {code} items 비어 있음. header={data.get('response',{}).get('header')}")
+            continue
         for it in items:
             inform_date = it.get('informData', '').replace('-', '')  # 'YYYY-MM-DD' → 'YYYYMMDD'
             grade_str = it.get('informGrade', '')
             grade = parse_inform_grade(grade_str, DATA_GO_KR_REGION)
-            if not inform_date or not grade:
+            if not inform_date:
+                continue
+            if not grade:
+                # 매칭 실패 시 처음 한 번만 진단 출력
+                if code not in [k for k in result.keys() if False]:  # 항상 첫 실패 출력
+                    sample = grade_str[:200] if grade_str else '(empty)'
+                    print(f"[DIAG] {code} '{DATA_GO_KR_REGION}' 매칭 실패. informGrade 샘플: {sample}")
                 continue
             result.setdefault(inform_date, {})[code] = grade
     return result
