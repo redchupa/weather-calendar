@@ -723,7 +723,7 @@ def _living_base_time(now):
 
 
 def fetch_uv_index(now):
-    """자외선 지수 — 오늘 최대값 (생활기상지수 V3.0)"""
+    """자외선 지수 — 오늘 최대값 (생활기상지수 3.0 — 실제 endpoint는 V5)"""
     if not DATA_GO_KR_KEY or not LIVING_AREA_NO:
         return None
     params = {
@@ -736,7 +736,7 @@ def fetch_uv_index(now):
     }
     try:
         res = requests.get(
-            'https://apis.data.go.kr/1360000/LivingWthrIdxServiceV3/getUVIdxV3',
+            'https://apis.data.go.kr/1360000/LivingWthrIdxServiceV5/getUVIdxV5',
             params=params, timeout=15)
         if res.status_code != 200:
             print(f"[WARN] 자외선지수 HTTP {res.status_code}")
@@ -776,10 +776,11 @@ def fetch_pollen_risk(now):
     if not DATA_GO_KR_KEY or not LIVING_AREA_NO:
         return None, None
     base_time = _living_base_time(now)
+    # 참고: 잡초 endpoint는 정부 측 실제 표기가 'Riskndx' (Idx 아님). 오타지만 그대로 사용.
     endpoints = [
         ('getOakPollenRiskIdxV3', '참나무'),
         ('getPinePollenRiskIdxV3', '소나무'),
-        ('getWeedsPollenRiskIdxV3', '잡초'),
+        ('getWeedsPollenRiskndxV3', '잡초'),
     ]
     max_risk = None
     max_label = None
