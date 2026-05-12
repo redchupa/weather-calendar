@@ -50,6 +50,8 @@ This project pulls weather forecasts from the Korea Meteorological Administratio
 > 📌 **This project uses two separate API providers. Both are free, but you need to issue keys at each one.**
 > - **A. KMA API Hub** → weather / warnings / earthquakes / typhoons (`KMA_API_KEY`)
 > - **B. data.go.kr (Public Data Portal)** → air quality / UV / pollen (`DATA_GO_KR_KEY`)
+>
+> 🚨 **Common gotcha**: If you click [활용신청] and **no "신청 완료" confirmation appears**, refresh the page (F5) and click [활용신청] again. The first request occasionally fails silently. Applies to both sites.
 
 ---
 
