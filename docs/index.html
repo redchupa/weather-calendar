@@ -134,13 +134,32 @@
         </table>
 
         <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:18px; margin-top:18px;">
-            <h3 style="margin-top:0; font-size:1.05em; color:#065f46;">🌫️ <code>DATA_GO_KR_KEY</code> 발급 방법</h3>
+            <h3 style="margin-top:0; font-size:1.05em; color:#065f46;">🌫️ <code>DATA_GO_KR_KEY</code> 발급 & 활용신청</h3>
             <ol style="padding-left:22px; margin:8px 0;">
                 <li><a href="https://www.data.go.kr/" target="_blank">공공데이터포털</a> 회원가입</li>
-                <li><a href="https://www.data.go.kr/data/15073861/openapi.do" target="_blank">한국환경공단_에어코리아_대기오염정보</a> 페이지에서 <b>[활용신청]</b> 클릭</li>
+                <li>검색창에서 아래 <b>3개 API를 각각 검색 → [활용신청]</b> 클릭:
+                    <table style="width:100%; border-collapse:collapse; margin-top:8px; font-size:0.9em;">
+                        <tr style="background:#d1fae5;">
+                            <th style="padding:6px; border:1px solid #a7f3d0; text-align:left;">검색 키워드</th>
+                            <th style="padding:6px; border:1px solid #a7f3d0; text-align:left;">용도</th>
+                        </tr>
+                        <tr>
+                            <td style="padding:6px; border:1px solid #a7f3d0;"><code>에어코리아 대기오염정보</code></td>
+                            <td style="padding:6px; border:1px solid #a7f3d0;">🌫️ 미세먼지 (PM10/PM2.5/O3)</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:6px; border:1px solid #a7f3d0;"><code>생활기상지수</code></td>
+                            <td style="padding:6px; border:1px solid #a7f3d0;">☀️ 자외선·식중독·천식 등</td>
+                        </tr>
+                        <tr>
+                            <td style="padding:6px; border:1px solid #a7f3d0;"><code>꽃가루</code></td>
+                            <td style="padding:6px; border:1px solid #a7f3d0;">🌸 참나무·소나무·잡초 꽃가루</td>
+                        </tr>
+                    </table>
+                </li>
                 <li>승인(즉시~1일) 후 [마이페이지 → 데이터활용 → Open API → 인증키 발급현황]에서 <b>일반 인증키(Encoding)</b> 복사</li>
             </ol>
-            <p style="font-size:0.85em; color:#047857; margin-top:8px; margin-bottom:0;">💡 이 인증키 하나로 공공데이터포털의 다른 API들도 함께 호출 가능합니다.</p>
+            <p style="font-size:0.85em; color:#047857; margin-top:8px; margin-bottom:0;">💡 <b>하나의 인증키로 위 3개 API 모두 호출 가능</b>합니다. <code>DATA_GO_KR_KEY</code> 시크릿에 등록.</p>
         </div>
 
         <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:18px; margin-top:12px;">
@@ -223,6 +242,23 @@
 
         <p style="margin-top: 20px;"><b>📸 달력 적용 예시 (클릭하면 커집니다):</b></p>
         <img src="./calendar.png" alt="구독 예시" class="example-img" onclick="openModal(this.src)">
+    </div>
+
+    <div class="card" style="border-top: 6px solid #f59e0b; text-align:center;">
+        <h2 style="justify-content:center;">☕ 후원</h2>
+        <p>이 프로젝트가 도움이 되셨다면 커피 한 잔으로 응원해주세요! 🙏</p>
+        <table style="margin:20px auto; border:none;">
+            <tr>
+                <td style="text-align:center; padding:0 20px;">
+                    <b>토스</b><br>
+                    <img src="https://raw.githubusercontent.com/redchupa/kr_component_kit/main/images/toss-donation.png" alt="Toss 후원 QR" width="200" style="margin-top:8px; border-radius:8px;">
+                </td>
+                <td style="text-align:center; padding:0 20px;">
+                    <b>PayPal</b><br>
+                    <img src="https://raw.githubusercontent.com/redchupa/kr_component_kit/main/images/paypal-donation.png" alt="PayPal 후원 QR" width="200" style="margin-top:8px; border-radius:8px;">
+                </td>
+            </tr>
+        </table>
     </div>
 
     <footer class="credit-box" style="margin-top: 40px; margin-bottom: 20px;">

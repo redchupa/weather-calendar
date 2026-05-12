@@ -3,6 +3,7 @@
 [![Update Weather ICS](https://github.com/redchupa/weather-calendar/actions/workflows/update.yml/badge.svg)](https://github.com/redchupa/weather-calendar/actions/workflows/update.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Pages](https://img.shields.io/badge/Setup_Guide-GitHub_Pages-2563eb?logo=github)](https://redchupa.github.io/weather-calendar/)
+[![Sponsor](https://img.shields.io/badge/☕_Sponsor-Toss%20%7C%20PayPal-ff5f5f?logo=githubsponsors)](#-후원)
 
 > **🌟 5분만에 세팅하고, 내 폰 캘린더에 매일 한국 날씨를 자동으로 표시하기**
 
@@ -114,16 +115,24 @@
 | `REG_ID_TEMP` | 중기기온 구역 코드 (예: `11B10101`) | 3단계 결과 |
 | `REG_ID_LAND` | 중기육상 구역 코드 (예: `11B00000`) | 3단계 결과 |
 | `LOCATION_NAME` | 캘린더 일정에 표시될 동네 이름 (예: `우리집`) | 직접 정함 |
-| `DATA_GO_KR_KEY` | 공공데이터포털 일반 인증키 (🌫️ 미세먼지용) | [공공데이터포털](https://www.data.go.kr/) → [에어코리아 대기오염정보](https://www.data.go.kr/data/15073861/openapi.do) 활용신청 |
+| `DATA_GO_KR_KEY` | 공공데이터포털 일반 인증키 (🌫️ 미세먼지 / ☀️ 자외선 / 🌸 꽃가루용) | [공공데이터포털](https://www.data.go.kr/) 가입 후 아래 3개 API에 모두 활용신청 |
 | `DATA_GO_KR_REGION` | 미세먼지 예보 지역명 | 아래 19개 중 하나 |
 
 > ⚠️ 시크릿 이름은 **대소문자/오타 주의**. 한 글자라도 다르면 워크플로우가 빈 값을 받아 실패해요.
 >
 > 💡 **`DATA_GO_KR_REGION` 가능 값 (에어코리아 표기 그대로)**: `서울`, `부산`, `대구`, `인천`, `광주`, `대전`, `울산`, `세종`, `경기북부`, `경기남부`, `강원영서`, `강원영동`, `충북`, `충남`, `전북`, `전남`, `경북`, `경남`, `제주`
 
-> ⚠️ 시크릿 이름은 **대소문자/오타 주의**. 한 글자라도 다르면 워크플로우가 빈 값을 받아 실패해요.
->
-> 💡 **`DATA_GO_KR_KEY` 발급법**: [공공데이터포털](https://www.data.go.kr/) 가입 → [한국환경공단_에어코리아_대기오염정보](https://www.data.go.kr/data/15073861/openapi.do) 활용신청 → 1~2일 후 승인되면 마이페이지에서 일반 인증키 복사. 이 키 하나로 공공데이터포털의 다양한 API에 공통으로 사용 가능.
+#### 📋 공공데이터포털에서 활용신청해야 할 3개 API
+
+공공데이터포털 검색창에 아래 키워드를 입력하면 해당 API가 나옵니다. 각각 **[활용신청]** 클릭:
+
+| 검색 키워드 | API 이름 | 용도 |
+|---|---|---|
+| `에어코리아 대기오염정보` | 한국환경공단_에어코리아_대기오염정보 | 🌫️ PM10·PM2.5·O3 실측 + 예보 |
+| `생활기상지수` | 기상청_생활기상지수 조회서비스 | ☀️ 자외선·식중독·천식 등 |
+| `꽃가루` | 기상청_보건기상지수 조회서비스 (꽃가루농도위험지수) | 🌸 참나무·소나무·잡초 꽃가루 |
+
+> 💡 **하나의 일반 인증키로 셋 다 사용 가능.** 활용신청 후 1~2일 내 승인되면 마이페이지에서 일반 인증키(Encoding) 복사 → `DATA_GO_KR_KEY` 시크릿에 등록.
 
 ### 5️⃣ 워크플로우 활성화 & 첫 실행
 
@@ -293,6 +302,25 @@ A를 마쳤다고 자동으로 폰에 뜨지 않습니다. 앱에 들어가서 *
     ├── region_codes.json
     └── calendar.png
 ```
+
+## ☕ 후원
+
+이 프로젝트가 도움이 되셨다면 커피 한 잔으로 응원해주세요! 🙏
+
+<table>
+  <tr>
+    <td align="center">
+      <b>토스</b><br/>
+      <img src="https://raw.githubusercontent.com/redchupa/kr_component_kit/main/images/toss-donation.png" alt="Toss 후원 QR" width="200"/>
+    </td>
+    <td align="center">
+      <b>PayPal</b><br/>
+      <img src="https://raw.githubusercontent.com/redchupa/kr_component_kit/main/images/paypal-donation.png" alt="PayPal 후원 QR" width="200"/>
+    </td>
+  </tr>
+</table>
+
+---
 
 ## 📜 라이선스
 
