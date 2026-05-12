@@ -723,7 +723,7 @@ def _living_base_time(now):
 
 
 def fetch_uv_index(now):
-    """자외선 지수 — 현재/오늘 최대값 반환 (float 또는 None)"""
+    """자외선 지수 — 오늘 최대값 (생활기상지수 V3.0)"""
     if not DATA_GO_KR_KEY or not LIVING_AREA_NO:
         return None
     params = {
@@ -736,7 +736,7 @@ def fetch_uv_index(now):
     }
     try:
         res = requests.get(
-            'https://apis.data.go.kr/1360000/LivingWthrIdxServiceV4/getUVIdxV4',
+            'https://apis.data.go.kr/1360000/LivingWthrIdxServiceV3/getUVIdxV3',
             params=params, timeout=15)
         if res.status_code != 200:
             print(f"[WARN] 자외선지수 HTTP {res.status_code}")
@@ -750,7 +750,6 @@ def fetch_uv_index(now):
     if not item_list:
         return None
     first = item_list[0] if isinstance(item_list, list) else item_list
-    # h0, h3, h6, h9, ... 시간별 값 중 발표시각 기준 오늘 범위에서 max
     todays = []
     for k in ('h0','h3','h6','h9','h12','h15','h18','h21'):
         v = first.get(k)
@@ -778,9 +777,9 @@ def fetch_pollen_risk(now):
         return None, None
     base_time = _living_base_time(now)
     endpoints = [
-        ('getOakPollenRiskIdxV4', '참나무'),
-        ('getPinePollenRiskIdxV4', '소나무'),
-        ('getWeedsPollenRiskIdxV4', '잡초'),
+        ('getOakPollenRiskIdxV3', '참나무'),
+        ('getPinePollenRiskIdxV3', '소나무'),
+        ('getWeedsPollenRiskIdxV3', '잡초'),
     ]
     max_risk = None
     max_label = None
@@ -794,9 +793,11 @@ def fetch_pollen_risk(now):
             'time': base_time,
         }
         try:
-            res = requests.get(f'https://apis.data.go.kr/1360000/HealthWthrIdxServiceV4/{ep}',
+            res = requests.get(f'https://apis.data.go.kr/1360000/HealthWthrIdxServiceV3/{ep}',
                                params=params, timeout=15)
             if res.status_code != 200:
+                if name == '참나무':
+                    print(f"[WARN] 꽃가루 ({name}) HTTP {res.status_code}")
                 continue
             data = res.json()
         except (requests.exceptions.RequestException, ValueError):
