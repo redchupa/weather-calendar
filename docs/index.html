@@ -91,13 +91,21 @@
 
     <div class="card">
         <h2><span class="step-num">1</span> <span data-lang="ko">프로젝트 포크 (Fork)</span><span data-lang="en">Fork the project</span></h2>
-        <p>상단 <b class="highlight">이 저장소</b> 링크 접속 후 오른쪽 상단의 <b>[Fork]</b> 버튼을 눌러 내 계정으로 가져옵니다.</p>
+        <p data-lang="ko">상단 <b class="highlight">이 저장소</b> 링크 접속 후 오른쪽 상단의 <b>[Fork]</b> 버튼을 눌러 내 계정으로 가져옵니다.</p>
+        <p data-lang="en">Click the <b>[Fork]</b> button in the top-right of <b class="highlight">this repo</b> to make a copy under your account.</p>
         <hr style="border: 0; border-top: 1px dashed #e2e8f0; margin: 20px 0;">
         <div style="background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid #e2e8f0;">
-            <h3 style="margin-top: 0; font-size: 1.1em; color: #475569;">🔄 기존 포크 사용자 업데이트 방법</h3>
-            <p style="font-size: 0.9em; margin-bottom: 0;">
+            <h3 style="margin-top: 0; font-size: 1.1em; color: #475569;">
+                <span data-lang="ko">🔄 기존 포크 사용자 업데이트 방법</span>
+                <span data-lang="en">🔄 Already forked? How to sync</span>
+            </h3>
+            <p style="font-size: 0.9em; margin-bottom: 0;" data-lang="ko">
                 이미 포크하신 분들은 본인 저장소 메인에서 <b>[Sync fork]</b> → <b>[Update branch]</b>를 누르세요.
                 최신 코드가 반영되어 <b>Secrets 설정</b>만으로 관리할 수 있게 됩니다.
+            </p>
+            <p style="font-size: 0.9em; margin-bottom: 0;" data-lang="en">
+                If you already forked, click <b>[Sync fork]</b> → <b>[Update branch]</b> on your fork's main page.
+                The latest code merges in and from then on you only need to manage <b>Secrets</b>.
             </p>
         </div>
     </div>
@@ -173,13 +181,13 @@
 
     <div class="card" id="step3">
         <h2><span class="step-num">3</span> <span data-lang="ko">내 동네 설정값 찾기</span><span data-lang="en">Find your neighborhood's settings (auto-calculator)</span></h2>
-        <p><b>① 가까운 예보 지점을 선택하세요:</b></p>
-        <select id="regionSelect"><option value="">데이터 로딩 중...</option></select>
-        <p><b>② 상세 주소(도로명)를 입력하세요:</b></p>
-        <input type="text" id="address" placeholder="예: 뚝섬로 599">
-        <button class="btn-calc" onclick="calculateAll()">설정값 계산하기</button>
+        <p><b><span data-lang="ko">① 가까운 예보 지점을 선택하세요:</span><span data-lang="en">① Pick the nearest forecast station:</span></b></p>
+        <select id="regionSelect"><option value=""><span data-lang="ko">데이터 로딩 중...</span><span data-lang="en">Loading...</span></option></select>
+        <p><b><span data-lang="ko">② 상세 주소(도로명)를 입력하세요:</span><span data-lang="en">② Enter your road-name address (Korean):</span></b></p>
+        <input type="text" id="address" placeholder="예: 뚝섬로 599 / e.g., 뚝섬로 599 (Korean road-name address)">
+        <button class="btn-calc" onclick="calculateAll()"><span data-lang="ko">설정값 계산하기</span><span data-lang="en">Calculate settings</span></button>
         <div id="result">
-            <p>✅ <b>다음 단계(Secrets)에서 입력할 값입니다:</b></p>
+            <p>✅ <b><span data-lang="ko">다음 단계(Secrets)에서 입력할 값입니다:</span><span data-lang="en">Use these values in the next step (Secrets):</span></b></p>
             <ul>
                 <li><code>KMA_NX</code>: <code id="res_nx">-</code> / <code>KMA_NY</code>: <code id="res_ny">-</code></li>
                 <li><code>REG_ID_LAND</code>: <code id="res_land">-</code> / <code>REG_ID_TEMP</code>: <code id="res_temp">-</code></li>
@@ -191,180 +199,172 @@
     <div class="card">
         <h2><span class="step-num">4</span> <span data-lang="ko">GitHub Secrets 설정</span><span data-lang="en">Configure GitHub Secrets</span></h2>
 
-        <div style="background:#fef9c3; border:1px solid #fde68a; border-radius:10px; padding:15px; margin:15px 0; font-size:0.95em;">
-            <p style="margin:0 0 8px; font-weight:bold; color:#854d0e;">📌 <span data-i18n="step4_keys_note_title">API 인증키는 두 곳에서 따로 발급받아야 합니다 (둘 다 무료)</span></p>
-            <ol style="margin:0; padding-left:22px; line-height:1.8;">
-                <li><a href="https://apihub.kma.go.kr/" target="_blank"><b>기상청 API 허브</b></a> → <code>KMA_API_KEY</code> <span data-i18n="step4_keys_note_kma">(Step 2에서 발급)</span></li>
-                <li><a href="https://www.data.go.kr/iim/api/selectAcountList.do" target="_blank"><b>공공데이터포털 마이페이지</b></a> → <code>DATA_GO_KR_KEY</code> <span data-i18n="step4_keys_note_dgk">(일반 인증키 발급/조회)</span></li>
-            </ol>
-            <p style="margin:8px 0 0; font-size:0.88em; color:#92400e;" data-i18n="step4_keys_note_warning">두 키는 별개이며 서로 호환되지 않습니다.</p>
-        </div>
-
-        <p>내 저장소 <b>Settings → Secrets and variables → Actions → <b>[New repository secret]</b></b> 버튼을 눌러, 아래 <b>9개 시크릿</b>을 하나씩 모두 등록합니다.</p>
+        <p data-lang="ko">내 저장소 <b>Settings → Secrets and variables → Actions → [New repository secret]</b> 버튼을 눌러, 아래 <b>9개 시크릿</b>을 하나씩 모두 등록합니다.</p>
+        <p data-lang="en">In your forked repo, open <b>Settings → Secrets and variables → Actions → [New repository secret]</b> and register all <b>9 secrets</b> below, one at a time.</p>
 
         <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:15px; margin:15px 0;">
-            <p style="margin:0 0 10px; font-weight:bold; color:#475569;">📸 시크릿 등록 화면 (예시: <code>DATA_GO_KR_REGION</code> = <code>서울</code>)</p>
-            <img src="./secret-example.png" alt="GitHub Secrets 등록 화면 예시" class="example-img" style="margin-top:0; cursor:zoom-in;" onclick="openModal(this.src)">
-            <p style="font-size:0.85em; color:#64748b; margin-top:10px;">
+            <p style="margin:0 0 10px; font-weight:bold; color:#475569;">📸 <span data-lang="ko">시크릿 등록 화면 (예시: <code>DATA_GO_KR_REGION</code> = <code>서울</code>)</span><span data-lang="en">Secret registration screen (example: <code>DATA_GO_KR_REGION</code> = <code>서울</code>)</span></p>
+            <img src="./secret-example.png" alt="GitHub Secrets registration example" class="example-img" style="margin-top:0; cursor:zoom-in;" onclick="openModal(this.src)">
+            <p style="font-size:0.85em; color:#64748b; margin-top:10px;" data-lang="ko">
                 <b>Name</b> 칸에 시크릿 이름(예: <code>DATA_GO_KR_REGION</code>)을, <b>Secret</b> 칸에 값(예: <code>서울</code>)을 입력한 뒤 <b>[Add secret]</b> 클릭.<br>
                 이 과정을 9번 반복하면 끝.
+            </p>
+            <p style="font-size:0.85em; color:#64748b; margin-top:10px;" data-lang="en">
+                Enter the secret name (e.g., <code>DATA_GO_KR_REGION</code>) in the <b>Name</b> field and the value (e.g., <code>서울</code>) in <b>Secret</b>, then click <b>[Add secret]</b>.<br>
+                Repeat 9 times — done.
             </p>
         </div>
 
         <table style="width:100%; border-collapse:collapse; margin-top:15px; font-size:0.95em;">
             <thead>
                 <tr style="background:#f1f5f9; text-align:left;">
-                    <th style="padding:10px; border:1px solid #e2e8f0;">이름</th>
-                    <th style="padding:10px; border:1px solid #e2e8f0;">값 / 어디서 얻나</th>
+                    <th style="padding:10px; border:1px solid #e2e8f0;"><span data-lang="ko">이름</span><span data-lang="en">Name</span></th>
+                    <th style="padding:10px; border:1px solid #e2e8f0;"><span data-lang="ko">값 / 어디서 얻나</span><span data-lang="en">Value / Where to get</span></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td style="padding:10px; border:1px solid #e2e8f0;"><code>KMA_API_KEY</code></td>
-                    <td style="padding:10px; border:1px solid #e2e8f0;">Step 2에서 복사한 기상청 인증키</td>
+                    <td style="padding:10px; border:1px solid #e2e8f0;"><span data-lang="ko">Step 2에서 복사한 기상청 인증키</span><span data-lang="en">KMA API key copied in Step 2</span></td>
                 </tr>
                 <tr>
                     <td style="padding:10px; border:1px solid #e2e8f0;"><code>KMA_NX</code> · <code>KMA_NY</code></td>
-                    <td style="padding:10px; border:1px solid #e2e8f0;">Step 3에서 계산된 격자 좌표</td>
+                    <td style="padding:10px; border:1px solid #e2e8f0;"><span data-lang="ko">Step 3에서 계산된 격자 좌표</span><span data-lang="en">Grid coordinates computed in Step 3</span></td>
                 </tr>
                 <tr>
                     <td style="padding:10px; border:1px solid #e2e8f0;"><code>REG_ID_LAND</code> · <code>REG_ID_TEMP</code></td>
-                    <td style="padding:10px; border:1px solid #e2e8f0;">Step 3에서 계산된 구역 코드</td>
+                    <td style="padding:10px; border:1px solid #e2e8f0;"><span data-lang="ko">Step 3에서 계산된 구역 코드</span><span data-lang="en">Region codes computed in Step 3</span></td>
                 </tr>
                 <tr>
                     <td style="padding:10px; border:1px solid #e2e8f0;"><code>LOCATION_NAME</code></td>
-                    <td style="padding:10px; border:1px solid #e2e8f0;">달력에 표시될 동네 이름 (예: <code>우리집</code>, <code>은계</code>)</td>
+                    <td style="padding:10px; border:1px solid #e2e8f0;"><span data-lang="ko">달력에 표시될 동네 이름 (예: <code>우리집</code>, <code>은계</code>)</span><span data-lang="en">Label shown on events (e.g., <code>My Home</code>)</span></td>
                 </tr>
                 <tr style="background:#ecfdf5;">
                     <td style="padding:10px; border:1px solid #e2e8f0;"><code>DATA_GO_KR_KEY</code></td>
-                    <td style="padding:10px; border:1px solid #e2e8f0;">공공데이터포털 일반 인증키 (🌫️ 미세먼지 / ☀️ 자외선 / 🌸 꽃가루용) — <b>발급 방법은 바로 아래 참고</b></td>
+                    <td style="padding:10px; border:1px solid #e2e8f0;"><span data-lang="ko">공공데이터포털 일반 인증키 (Step 2B에서 발급)</span><span data-lang="en">data.go.kr general auth key (issued in Step 2B)</span></td>
                 </tr>
                 <tr style="background:#ecfdf5;">
                     <td style="padding:10px; border:1px solid #e2e8f0;"><code>DATA_GO_KR_REGION</code></td>
-                    <td style="padding:10px; border:1px solid #e2e8f0;">에어코리아 예보 지역명 (Step 3에서 자동 계산됨)</td>
+                    <td style="padding:10px; border:1px solid #e2e8f0;"><span data-lang="ko">에어코리아 예보 지역명 (Step 3에서 자동 계산됨)</span><span data-lang="en">AirKorea region name (auto-computed in Step 3)</span></td>
                 </tr>
                 <tr style="background:#ecfdf5;">
                     <td style="padding:10px; border:1px solid #e2e8f0;"><code>LIVING_AREA_NO</code></td>
-                    <td style="padding:10px; border:1px solid #e2e8f0;">행정표준코드 10자리 (☀️ 자외선·🌸 꽃가루용) — <a href="https://www.code.go.kr/" target="_blank">행정표준코드 사이트</a> 에서 시군구 검색. 예: 시흥 <code>4139000000</code></td>
+                    <td style="padding:10px; border:1px solid #e2e8f0;"><span data-lang="ko">행정표준코드 10자리 (☀️ 자외선·🌸 꽃가루용) — <a href="https://www.code.go.kr/" target="_blank">행정표준코드 사이트</a> 에서 시군구 검색. 예: 시흥 <code>4139000000</code></span><span data-lang="en">10-digit Korean administrative code (for UV/pollen) — look up at <a href="https://www.code.go.kr/" target="_blank">code.go.kr</a>. E.g., Siheung <code>4139000000</code></span></td>
                 </tr>
             </tbody>
         </table>
 
         <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:18px; margin-top:18px;">
-            <h3 style="margin-top:0; font-size:1.05em; color:#065f46;">🌫️ <code>DATA_GO_KR_KEY</code> 발급 & 활용신청</h3>
-            <ol style="padding-left:22px; margin:8px 0;">
-                <li><a href="https://www.data.go.kr/" target="_blank">공공데이터포털</a> 회원가입</li>
-                <li>검색창에서 아래 <b>3개 API를 각각 검색 → [활용신청]</b> 클릭:
-                    <table style="width:100%; border-collapse:collapse; margin-top:8px; font-size:0.9em;">
-                        <tr style="background:#d1fae5;">
-                            <th style="padding:6px; border:1px solid #a7f3d0; text-align:left;">검색 키워드</th>
-                            <th style="padding:6px; border:1px solid #a7f3d0; text-align:left;">용도</th>
-                        </tr>
-                        <tr>
-                            <td style="padding:6px; border:1px solid #a7f3d0;"><code>에어코리아 대기오염정보</code></td>
-                            <td style="padding:6px; border:1px solid #a7f3d0;">🌫️ 미세먼지 (PM10/PM2.5/O3)</td>
-                        </tr>
-                        <tr>
-                            <td style="padding:6px; border:1px solid #a7f3d0;"><code>생활기상지수</code></td>
-                            <td style="padding:6px; border:1px solid #a7f3d0;">☀️ 자외선·식중독·천식 등</td>
-                        </tr>
-                        <tr>
-                            <td style="padding:6px; border:1px solid #a7f3d0;"><code>꽃가루</code></td>
-                            <td style="padding:6px; border:1px solid #a7f3d0;">🌸 참나무·소나무·잡초 꽃가루</td>
-                        </tr>
-                    </table>
-                </li>
-                <li>승인(즉시~1일) 후 [마이페이지 → 데이터활용 → Open API → 인증키 발급현황]에서 <b>일반 인증키(Encoding)</b> 복사</li>
-            </ol>
-            <p style="font-size:0.85em; color:#047857; margin-top:8px; margin-bottom:0;">💡 <b>하나의 인증키로 위 3개 API 모두 호출 가능</b>합니다. <code>DATA_GO_KR_KEY</code> 시크릿에 등록.</p>
-        </div>
-
-        <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:18px; margin-top:12px;">
-            <h3 style="margin-top:0; font-size:1.05em; color:#065f46;">📍 <code>DATA_GO_KR_REGION</code> 가능 값</h3>
-            <p style="margin:8px 0;">아래 19개 중 본인 거주지에 해당하는 값을 정확히 입력 (오타·띄어쓰기 주의):</p>
+            <h3 style="margin-top:0; font-size:1.05em; color:#065f46;">📍 <code>DATA_GO_KR_REGION</code> <span data-lang="ko">가능 값</span><span data-lang="en">valid values</span></h3>
+            <p style="margin:8px 0;" data-lang="ko">아래 19개 중 본인 거주지에 해당하는 값을 정확히 입력 (오타·띄어쓰기 주의):</p>
+            <p style="margin:8px 0;" data-lang="en">Enter exactly one of the 19 values below for your region (case/spacing matters):</p>
             <p style="background:white; padding:12px; border-radius:6px; border:1px solid #d1fae5; line-height:2;">
                 <code>서울</code> · <code>부산</code> · <code>대구</code> · <code>인천</code> · <code>광주</code> · <code>대전</code> · <code>울산</code> · <code>세종</code> · <code>경기북부</code> · <code>경기남부</code> · <code>강원영서</code> · <code>강원영동</code> · <code>충북</code> · <code>충남</code> · <code>전북</code> · <code>전남</code> · <code>경북</code> · <code>경남</code> · <code>제주</code>
             </p>
         </div>
 
-        <p style="font-size:0.85em; color:#64748b; margin-top:15px;">⚠️ 시크릿 이름은 대소문자/철자 정확히. 한 글자라도 다르면 빈 값으로 처리되어 기능이 비활성화됩니다.</p>
-        <p style="font-size:0.85em; color:#64748b; margin-top:8px;">💡 기상특보(🚨)는 Step 2의 "특보현황 조회" 활용신청만 마치면 추가 시크릿 없이 자동으로 표시됩니다.</p>
+        <p style="font-size:0.85em; color:#64748b; margin-top:15px;" data-lang="ko">⚠️ 시크릿 이름은 대소문자/철자 정확히. 한 글자라도 다르면 빈 값으로 처리되어 기능이 비활성화됩니다.</p>
+        <p style="font-size:0.85em; color:#64748b; margin-top:15px;" data-lang="en">⚠️ Secret names are case-sensitive. One typo and the workflow gets an empty value, disabling the feature.</p>
+        <p style="font-size:0.85em; color:#64748b; margin-top:8px;" data-lang="ko">💡 기상특보(🚨)는 Step 2의 "특보현황 조회" 활용신청만 마치면 추가 시크릿 없이 자동으로 표시됩니다.</p>
+        <p style="font-size:0.85em; color:#64748b; margin-top:8px;" data-lang="en">💡 Weather warnings (🚨) auto-appear once you've applied for "특보현황 조회" in Step 2 — no extra secret needed.</p>
     </div>
 
     <div class="card">
         <h2><span class="step-num">5</span> <span data-lang="ko">자동 업데이트 활성화</span><span data-lang="en">Enable auto-update</span></h2>
         <div class="alert-box">
-            <strong>⚠️ 중요: GitHub Actions 활성화 (최초 1회)</strong><br>
-            GitHub 정책상 Fork된 저장소는 자동 실행 기능이 꺼져 있습니다.<br>
-            상단 <b>[Actions]</b> 탭 클릭 후 나타나는 초록색 버튼 <b>"I understand my workflows, go ahead and enable them"</b>을 반드시 눌러주세요!
+            <strong><span data-lang="ko">⚠️ 중요: GitHub Actions 활성화 (최초 1회)</span><span data-lang="en">⚠️ Important: Enable GitHub Actions (one-time)</span></strong><br>
+            <span data-lang="ko">GitHub 정책상 Fork된 저장소는 자동 실행 기능이 꺼져 있습니다.<br>
+            상단 <b>[Actions]</b> 탭 클릭 후 나타나는 초록색 버튼 <b>"I understand my workflows, go ahead and enable them"</b>을 반드시 눌러주세요!</span>
+            <span data-lang="en">GitHub disables Actions on forked repos by default.<br>
+            Click the <b>[Actions]</b> tab, then the green <b>"I understand my workflows, go ahead and enable them"</b> button that appears.</span>
         </div>
         <div class="wait-box">
-            <strong>⏳ 첫 실행 확인하기</strong><br>
-            활성화 후 왼쪽 목록에서 <b>Update Weather ICS</b>를 선택하고, <b>Run workflow</b>를 눌러 수동으로 한 번 실행해 보세요.
+            <strong><span data-lang="ko">⏳ 첫 실행 확인하기</span><span data-lang="en">⏳ Verify the first run</span></strong><br>
+            <span data-lang="ko">활성화 후 왼쪽 목록에서 <b>Update Weather ICS</b>를 선택하고, <b>Run workflow</b>를 눌러 수동으로 한 번 실행해 보세요.</span>
+            <span data-lang="en">After enabling, pick <b>Update Weather ICS</b> from the left list, then click <b>Run workflow</b> to test it manually.</span>
         </div>
     </div>
 
     <div class="card" style="border-top: 6px solid var(--success);">
         <h2><span class="step-num">6</span> <span data-lang="ko">캘린더 구독하기</span><span data-lang="en">Subscribe in your calendar</span></h2>
-        <p>워크플로우 실행이 끝났다면, 본인 레포의 <code>weather.ics</code> 파일에 들어가 우측 상단 <b>[Raw]</b> 버튼을 누른 뒤 주소창 URL을 복사하세요.</p>
+        <p data-lang="ko">워크플로우 실행이 끝났다면, 본인 레포의 <code>weather.ics</code> 파일에 들어가 우측 상단 <b>[Raw]</b> 버튼을 누른 뒤 주소창 URL을 복사하세요.</p>
+        <p data-lang="en">After the workflow completes, open <code>weather.ics</code> in your repo, click <b>[Raw]</b> in the top-right, and copy the URL from the address bar.</p>
 
         <div style="background:#ecfdf5; border:1px solid #a7f3d0; border-radius:10px; padding:18px; margin-top:15px;">
             <div style="font-size:0.9em; color:#065f46; font-weight:bold; margin-bottom:8px;">📋 Raw URL 형식</div>
             <div style="position:relative;">
                 <input type="text" id="rawUrlInput" readonly value="https://raw.githubusercontent.com/<본인_GitHub_ID>/weather-calendar/main/weather.ics" style="width:100%; padding:12px 90px 12px 12px; border:1px solid #6ee7b7; border-radius:8px; font-family:monospace; font-size:0.85em; background:white; color:#064e3b; box-sizing:border-box;">
-                <button onclick="copyRawUrl()" style="position:absolute; right:6px; top:50%; transform:translateY(-50%); padding:6px 14px; background:#059669; color:white; border:none; border-radius:6px; cursor:pointer; font-size:0.85em; font-weight:bold;">복사</button>
+                <button onclick="copyRawUrl()" style="position:absolute; right:6px; top:50%; transform:translateY(-50%); padding:6px 14px; background:#059669; color:white; border:none; border-radius:6px; cursor:pointer; font-size:0.85em; font-weight:bold;"><span data-lang="ko">복사</span><span data-lang="en">Copy</span></button>
             </div>
-            <p style="font-size:0.85em; color:#047857; margin:10px 0 5px;">
+            <p style="font-size:0.85em; color:#047857; margin:10px 0 5px;" data-lang="ko">
                 ⚠️ <b>&lt;본인_GitHub_ID&gt;</b> 부분은 본인의 GitHub 사용자명으로 바꿔주세요.
             </p>
+            <p style="font-size:0.85em; color:#047857; margin:10px 0 5px;" data-lang="en">
+                ⚠️ Replace <b>&lt;본인_GitHub_ID&gt;</b> with your actual GitHub username.
+            </p>
             <details style="margin-top:10px;">
-                <summary style="cursor:pointer; font-size:0.85em; color:#047857; font-weight:bold;">📌 실제 예시 보기 (이 레포 기준)</summary>
+                <summary style="cursor:pointer; font-size:0.85em; color:#047857; font-weight:bold;"><span data-lang="ko">📌 실제 예시 보기 (이 레포 기준)</span><span data-lang="en">📌 View real example (this repo)</span></summary>
                 <code style="display:block; margin-top:8px; padding:10px; background:white; border:1px solid #d1fae5; border-radius:6px; font-size:0.8em; word-break:break-all; color:#064e3b;">https://raw.githubusercontent.com/redchupa/weather-calendar/main/weather.ics</code>
-                <p style="font-size:0.8em; color:#64748b; margin-top:8px;">이 페이지 운영자(redchupa)의 실제 URL입니다. 본인은 fork한 후 본인 ID로 바꿔서 사용하세요.</p>
+                <p style="font-size:0.8em; color:#64748b; margin-top:8px;" data-lang="ko">이 페이지 운영자(redchupa)의 실제 URL입니다. 본인은 fork한 후 본인 ID로 바꿔서 사용하세요.</p>
+                <p style="font-size:0.8em; color:#64748b; margin-top:8px;" data-lang="en">This is the page maintainer's (redchupa) actual URL. After forking, swap in your own GitHub username.</p>
             </details>
         </div>
 
         <div class="info-box">
-            <b>📲 캘린더 앱별 등록 방법</b>
-            <ul style="margin-top:10px; padding-left:20px; font-size:0.95em; line-height:1.8;">
+            <b><span data-lang="ko">📲 캘린더 앱별 등록 방법</span><span data-lang="en">📲 How to subscribe in each calendar app</span></b>
+            <ul style="margin-top:10px; padding-left:20px; font-size:0.95em; line-height:1.8;" data-lang="ko">
                 <li><b>Google 캘린더 (PC 권장):</b> calendar.google.com → 좌측 "다른 캘린더" 옆 <b>+</b> → <b>"URL로 만들기"</b> → URL 붙여넣기</li>
                 <li><b>iPhone (Apple 캘린더):</b> 설정 → 캘린더 → 계정 → 계정 추가 → 기타 → <b>구독 캘린더 추가</b> → 서버에 URL 입력</li>
                 <li><b>삼성 갤럭시:</b> 삼성 캘린더는 URL 구독 미지원 → <b>Google 캘린더 앱 설치</b> 후 위 방법 사용</li>
             </ul>
+            <ul style="margin-top:10px; padding-left:20px; font-size:0.95em; line-height:1.8;" data-lang="en">
+                <li><b>Google Calendar (PC, recommended):</b> calendar.google.com → left "Other calendars" + button → <b>"From URL"</b> → paste URL</li>
+                <li><b>iPhone (Apple Calendar):</b> Settings → Calendar → Accounts → Add Account → Other → <b>Add Subscribed Calendar</b> → paste URL</li>
+                <li><b>Samsung Galaxy:</b> Samsung Calendar doesn't support ICS URL subscription → install <b>Google Calendar app</b> and follow the Google method above</li>
+            </ul>
         </div>
 
         <div class="alert-box" style="background:#fef3c7; border-color:#fde68a; color:#92400e;">
-            <strong>📱 모바일 앱에서 안 보이면?</strong><br>
-            Google 계정에 추가했는데 폰 앱에 안 보이는 경우가 흔합니다. <a href="https://calendar.google.com/calendar/syncselect" target="_blank" style="color:#78350f; font-weight:bold;">calendar.google.com/calendar/syncselect</a> 에 접속해 캘린더 체크 ON → 저장 → 폰 앱에서 "동기화" 토글 ON → 캘린더 목록 체크박스 ON 까지 해야 합니다.
+            <strong><span data-lang="ko">📱 모바일 앱에서 안 보이면?</span><span data-lang="en">📱 Not showing on mobile?</span></strong><br>
+            <span data-lang="ko">Google 계정에 추가했는데 폰 앱에 안 보이는 경우가 흔합니다. <a href="https://calendar.google.com/calendar/syncselect" target="_blank" style="color:#78350f; font-weight:bold;">calendar.google.com/calendar/syncselect</a> 에 접속해 캘린더 체크 ON → 저장 → 폰 앱에서 "동기화" 토글 ON → 캘린더 목록 체크박스 ON 까지 해야 합니다.</span>
+            <span data-lang="en">It's common for a calendar added on PC to not appear on the mobile app. Go to <a href="https://calendar.google.com/calendar/syncselect" target="_blank" style="color:#78350f; font-weight:bold;">calendar.google.com/calendar/syncselect</a> → check the calendar → Save → then on your phone toggle "Sync" ON → tap the checkbox in the calendar list.</span>
         </div>
 
         <div class="info-box">
-            <b>⏰ 업데이트 주기 안내</b>
-            <ul style="margin-top: 10px; padding-left: 20px;">
+            <b><span data-lang="ko">⏰ 업데이트 주기 안내</span><span data-lang="en">⏰ Update frequency</span></b>
+            <ul style="margin-top: 10px; padding-left: 20px;" data-lang="ko">
                 <li><b>단기 예보 (오늘~3일):</b> 기상청 데이터 갱신에 맞춰 매 3시간마다 자동 갱신됩니다.</li>
                 <li><b>중기 예보 (4일~10일):</b> 하루 2번(오전 6시, 오후 6시) 자동 갱신됩니다.</li>
             </ul>
-            <p style="margin-top: 10px; font-size: 0.9em; color: #64748b;">
+            <ul style="margin-top: 10px; padding-left: 20px;" data-lang="en">
+                <li><b>Short-term (today~3 days):</b> Refreshed every 3 hours, aligned with KMA release schedule.</li>
+                <li><b>Mid-term (4~10 days):</b> Refreshed twice daily (06:00 and 18:00 KST).</li>
+            </ul>
+            <p style="margin-top: 10px; font-size: 0.9em; color: #64748b;" data-lang="ko">
                 ※ <b>주의:</b> 스마트폰 달력 앱(아이폰, 갤럭시 등) 자체의 동기화 주기에 따라 실제 반영은 약간 늦어질 수 있습니다.
+            </p>
+            <p style="margin-top: 10px; font-size: 0.9em; color: #64748b;" data-lang="en">
+                ※ <b>Note:</b> Your phone's calendar app has its own sync interval, so reflection on-device may lag a bit.
             </p>
         </div>
 
-        <p style="margin-top: 20px;"><b>📸 달력 적용 예시</b></p>
-        <img src="./calendar.png" alt="구독 예시" class="example-img" onclick="openModal(this.src)">
+        <p style="margin-top: 20px;"><b><span data-lang="ko">📸 달력 적용 예시</span><span data-lang="en">📸 Calendar in action</span></b></p>
+        <img src="./calendar.png" alt="Calendar example" class="example-img" onclick="openModal(this.src)">
     </div>
 
     <div class="card" style="border-top: 6px solid #f59e0b; text-align:center;">
-        <h2 style="justify-content:center;">☕ 후원</h2>
-        <p>이 프로젝트가 도움이 되셨다면 커피 한 잔으로 응원해주세요! 🙏</p>
+        <h2 style="justify-content:center;">☕ <span data-lang="ko">후원</span><span data-lang="en">Sponsor</span></h2>
+        <p data-lang="ko">이 프로젝트가 도움이 되셨다면 커피 한 잔으로 응원해주세요! 🙏</p>
+        <p data-lang="en">If this project helps you, buy me a coffee! 🙏</p>
         <table style="margin:20px auto; border:none;">
             <tr>
                 <td style="text-align:center; padding:0 20px;">
-                    <b>토스</b><br>
-                    <img src="https://raw.githubusercontent.com/redchupa/kr_component_kit/main/images/toss-donation.png" alt="Toss 후원 QR" width="200" style="margin-top:8px; border-radius:8px;">
+                    <b><span data-lang="ko">토스</span><span data-lang="en">Toss</span></b><br>
+                    <img src="https://raw.githubusercontent.com/redchupa/kr_component_kit/main/images/toss-donation.png" alt="Toss donation QR" width="200" style="margin-top:8px; border-radius:8px;">
                 </td>
                 <td style="text-align:center; padding:0 20px;">
                     <b>PayPal</b><br>
-                    <img src="https://raw.githubusercontent.com/redchupa/kr_component_kit/main/images/paypal-donation.png" alt="PayPal 후원 QR" width="200" style="margin-top:8px; border-radius:8px;">
+                    <img src="https://raw.githubusercontent.com/redchupa/kr_component_kit/main/images/paypal-donation.png" alt="PayPal donation QR" width="200" style="margin-top:8px; border-radius:8px;">
                 </td>
             </tr>
         </table>
@@ -382,12 +382,20 @@
                 const res = await fetch('./region_codes.json');
                 const data = await res.json();
                 const select = document.getElementById('regionSelect');
-                select.innerHTML = '<option value="">-- 가까운 지점 선택 --</option>';
+                const isEn = document.documentElement.lang === 'en';
+                select.innerHTML = isEn
+                    ? '<option value="">-- Select nearest station --</option>'
+                    : '<option value="">-- 가까운 지점 선택 --</option>';
                 data.sort((a, b) => a.name.localeCompare(b.name)).forEach(item => {
                     const opt = document.createElement('option');
                     opt.value = item.id; opt.text = item.name; select.appendChild(opt);
                 });
-            } catch (e) { document.getElementById('regionSelect').innerHTML = '<option>데이터 로드 실패</option>'; }
+            } catch (e) {
+                const isEn = document.documentElement.lang === 'en';
+                document.getElementById('regionSelect').innerHTML = isEn
+                    ? '<option>Failed to load data</option>'
+                    : '<option>데이터 로드 실패</option>';
+            }
         }
         loadRegions();
 
@@ -459,13 +467,14 @@
         }
 
         async function calculateAll() {
+            const isEn = document.documentElement.lang === 'en';
             const tempId = document.getElementById('regionSelect').value;
             const address = document.getElementById('address').value;
-            if (!tempId || !address) return alert("지점과 주소를 모두 입력해 주세요!");
+            if (!tempId || !address) return alert(isEn ? "Please select a station and enter an address." : "지점과 주소를 모두 입력해 주세요!");
             try {
                 const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`);
                 const data = await res.json();
-                if (data.length === 0) return alert("주소를 찾을 수 없습니다.");
+                if (data.length === 0) return alert(isEn ? "Address not found." : "주소를 찾을 수 없습니다.");
                 const lat = parseFloat(data[0].lat);
                 const lon = parseFloat(data[0].lon);
                 const grid = getGrid(lat, lon);
@@ -475,11 +484,12 @@
                 document.getElementById('res_temp').innerText = tempId;
                 document.getElementById('res_land').innerText = getLandCode(tempId);
                 document.getElementById('res_air').innerText = airRegion;
-                document.getElementById('res_air_note').innerText =
-                    `(위경도 ${lat.toFixed(3)}, ${lon.toFixed(3)} 기준 자동 매핑)`;
+                document.getElementById('res_air_note').innerText = isEn
+                    ? `(auto-mapped from lat ${lat.toFixed(3)}, lon ${lon.toFixed(3)})`
+                    : `(위경도 ${lat.toFixed(3)}, ${lon.toFixed(3)} 기준 자동 매핑)`;
                 document.getElementById('result').style.display = 'block';
                 document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'center' });
-            } catch (e) { alert("오류 발생!"); }
+            } catch (e) { alert(isEn ? "An error occurred." : "오류 발생!"); }
         }
 
         // 언어 토글 (KO ↔ EN). localStorage 에 선택 저장.
@@ -503,14 +513,19 @@
         window.onkeydown = function(event) { if (event.keyCode == 27) closeModal(); };
 
         function copyRawUrl() {
+            const isEn = document.documentElement.lang === 'en';
             const input = document.getElementById('rawUrlInput');
             input.select();
             input.setSelectionRange(0, 99999);
+            const fullMsg = isEn
+                ? '✓ Copied! Replace <본인_GitHub_ID> with your GitHub username'
+                : '✓ 복사되었습니다! <본인_GitHub_ID> 부분을 본인 ID로 바꿔주세요';
+            const shortMsg = isEn ? '✓ Copied!' : '✓ 복사되었습니다!';
             try {
-                navigator.clipboard.writeText(input.value).then(() => showCopyToast('✓ 복사되었습니다! <본인_GitHub_ID> 부분을 본인 ID로 바꿔주세요'));
+                navigator.clipboard.writeText(input.value).then(() => showCopyToast(fullMsg));
             } catch (e) {
                 document.execCommand('copy');
-                showCopyToast('✓ 복사되었습니다!');
+                showCopyToast(shortMsg);
             }
         }
         function showCopyToast(msg) {
