@@ -605,8 +605,10 @@ def fetch_air_forecast(now):
             continue
         items = (data.get('response', {}).get('body', {}) or {}).get('items') or []
         # 무조건 진단 출력 (한 번에 응답 구조 파악)
-        first_grade = items[0].get('informGrade', '(no informGrade key)')[:300] if items else '(empty items)'
-        print(f"[DIAG-AIR] {code} status={res.status_code} items={len(items)} firstGrade={first_grade!r}")
+        first_keys = list(items[0].keys()) if items else []
+        print(f"[DIAG-AIR] {code} status={res.status_code} items={len(items)} firstItemKeys={first_keys}")
+        if items:
+            print(f"[DIAG-AIR] firstItem(full)={dict(items[0])}")
         matched_any = False
         for it in items:
             inform_date = it.get('informData', '').replace('-', '')
