@@ -87,7 +87,16 @@
 
     <div class="card">
         <h2><span class="step-num">4</span> GitHub Secrets 설정</h2>
-        <p>내 저장소 <b>Settings → Secrets and variables → Actions</b>에서 아래 <b>8개 시크릿</b>을 모두 등록합니다.</p>
+        <p>내 저장소 <b>Settings → Secrets and variables → Actions → <b>[New repository secret]</b></b> 버튼을 눌러, 아래 <b>8개 시크릿</b>을 하나씩 모두 등록합니다.</p>
+
+        <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:15px; margin:15px 0;">
+            <p style="margin:0 0 10px; font-weight:bold; color:#475569;">📸 시크릿 등록 화면 (예시: <code>DATA_GO_KR_REGION</code> = <code>서울</code>)</p>
+            <img src="./secret-example.png" alt="GitHub Secrets 등록 화면 예시" class="example-img" style="margin-top:0; cursor:zoom-in;" onclick="openModal(this.src)">
+            <p style="font-size:0.85em; color:#64748b; margin-top:10px;">
+                <b>Name</b> 칸에 시크릿 이름(예: <code>DATA_GO_KR_REGION</code>)을, <b>Secret</b> 칸에 값(예: <code>서울</code>)을 입력한 뒤 <b>[Add secret]</b> 클릭.<br>
+                이 과정을 8번 반복하면 끝.
+            </p>
+        </div>
 
         <table style="width:100%; border-collapse:collapse; margin-top:15px; font-size:0.95em;">
             <thead>
