@@ -126,11 +126,64 @@ In your forked repo:
 | `LOCATION_NAME` | Neighborhood label shown on events (e.g., `My Home`) | Pick anything |
 | `DATA_GO_KR_KEY` | data.go.kr general auth key (for 🌫️ PM / ☀️ UV / 🌸 pollen) | [data.go.kr](https://www.data.go.kr/), apply for 3 APIs below |
 | `DATA_GO_KR_REGION` | AirKorea forecast region name | One of 19 region names |
-| `LIVING_AREA_NO` | 10-digit administrative code (for ☀️ UV · 🌸 pollen) | [code.go.kr](https://www.code.go.kr/) lookup — e.g., Siheung `4139000000`, Gangnam-gu `1168000000` |
+| `LIVING_AREA_NO` | 10-digit administrative code (for ☀️ UV · 🌸 pollen) | [code.go.kr 법정동코드 검색](https://www.code.go.kr/stdcode/regCodeL.do) — pick the city-level code (ends in `000000`). See lookup table below. |
 
 > ⚠️ Secret names are **case-sensitive** — one typo and the workflow gets an empty value and fails.
 >
 > 💡 **`DATA_GO_KR_REGION` valid values (AirKorea naming)**: `서울` (Seoul), `부산` (Busan), `대구` (Daegu), `인천` (Incheon), `광주` (Gwangju), `대전` (Daejeon), `울산` (Ulsan), `세종` (Sejong), `경기북부` (N. Gyeonggi), `경기남부` (S. Gyeonggi), `강원영서` (W. Gangwon), `강원영동` (E. Gangwon), `충북` (N. Chungcheong), `충남` (S. Chungcheong), `전북` (N. Jeolla), `전남` (S. Jeolla), `경북` (N. Gyeongsang), `경남` (S. Gyeongsang), `제주` (Jeju)
+
+<details>
+<summary><b>📋 Common Korean district codes (click to expand)</b></summary>
+
+**Metro & Provinces (provincial level):**
+
+| Region | Code |
+|---|---|
+| Seoul | `1100000000` |
+| Busan | `2600000000` |
+| Daegu | `2700000000` |
+| Incheon | `2800000000` |
+| Gwangju | `2900000000` |
+| Daejeon | `3000000000` |
+| Ulsan | `3100000000` |
+| Sejong | `3600000000` |
+| Gangwon | `4200000000` |
+| N. Chungcheong | `4300000000` |
+| S. Chungcheong | `4400000000` |
+| N. Jeolla | `5200000000` |
+| S. Jeolla | `4600000000` |
+| N. Gyeongsang | `4700000000` |
+| S. Gyeongsang | `4800000000` |
+| Jeju | `5000000000` |
+
+**Major Gyeonggi cities:**
+
+| City | Code |
+|---|---|
+| Suwon | `4111000000` |
+| Seongnam | `4113000000` |
+| Uijeongbu | `4115000000` |
+| Anyang | `4117000000` |
+| Pyeongtaek | `4122000000` |
+| Ansan | `4127000000` |
+| Goyang | `4128000000` |
+| Siheung | `4139000000` |
+| Hwaseong | `4159000000` |
+
+**Major Seoul districts:**
+
+| District | Code |
+|---|---|
+| Jongno-gu | `1111000000` |
+| Gangnam-gu | `1168000000` |
+| Songpa-gu | `1171000000` |
+| Mapo-gu | `1144000000` |
+| Yeongdeungpo-gu | `1156000000` |
+| Gangseo-gu | `1150000000` |
+
+> For other regions, search at [code.go.kr legal district code lookup](https://www.code.go.kr/stdcode/regCodeL.do).
+
+</details>
 
 ### 5️⃣ Enable workflow & run
 
