@@ -45,10 +45,18 @@ This project pulls weather forecasts from the Korea Meteorological Administratio
 2. Click "Create fork" — a copy lands in your account
 3. All subsequent steps happen **in your forked repo** (not the original)
 
-### 2️⃣ Get a KMA API Hub auth key
+### 2️⃣ Get API auth keys (from TWO providers)
+
+> 📌 **This project uses two separate API providers. Both are free, but you need to issue keys at each one.**
+> - **A. KMA API Hub** → weather / warnings / earthquakes / typhoons (`KMA_API_KEY`)
+> - **B. data.go.kr (Public Data Portal)** → air quality / UV / pollen (`DATA_GO_KR_KEY`)
+
+---
+
+#### 🅰 Get `KMA_API_KEY` at KMA API Hub
 
 1. Sign up at [KMA API Hub](https://apihub.kma.go.kr/) (email + phone verification only — no Korean citizen certificate needed)
-2. In the left menu, apply for each service below ("활용신청" button):
+2. In the left menu, apply for each of these **7 services** ("활용신청" button):
    - **예특보 (Forecasts/Warnings)** > 단기예보 › `4.2 초단기예보조회` (ultra-short, for accuracy boost)
    - **예특보** > 단기예보 › `4.3 단기예보조회` (short-term)
    - **예특보** > 중기예보 › `2.2 중기기온조회` (mid-term temperature)
@@ -59,6 +67,25 @@ This project pulls weather forecasts from the Korea Meteorological Administratio
 3. Top right **[마이페이지] → [인증키 현황]** — copy the API key string
 
 > ℹ️ Approvals are usually instant, occasionally a few minutes.
+
+---
+
+#### 🅱 Get `DATA_GO_KR_KEY` at data.go.kr
+
+1. Sign up at [data.go.kr](https://www.data.go.kr/)
+2. Search the portal for these **3 APIs** and click **[활용신청]** on each:
+
+   | Search keyword | API name | Purpose |
+   |---|---|---|
+   | `에어코리아 대기오염정보` | AirKorea Air Pollution Info | 🌫️ PM10·PM2.5·O3 realtime + forecast |
+   | `생활기상지수` | KMA Living Weather Index Service | ☀️ UV / food poisoning / asthma indices |
+   | `꽃가루` | KMA Health Weather Index Service (pollen) | 🌸 Oak · pine · weeds pollen |
+
+3. After 1~2 days, copy the **encoded general auth key** from [data.go.kr My Page → Auth keys](https://www.data.go.kr/iim/api/selectAcountList.do)
+
+> 💡 **A single general auth key works for all 3 APIs.** You apply separately per API, but the key is shared.
+>
+> 💡 The pollen API is found by searching `꽃가루` (not `보건기상지수`).
 
 ### 3️⃣ Find your neighborhood's NX/NY + region codes
 
@@ -102,18 +129,6 @@ In your forked repo:
 > ⚠️ Secret names are **case-sensitive** — one typo and the workflow gets an empty value and fails.
 >
 > 💡 **`DATA_GO_KR_REGION` valid values (AirKorea naming)**: `서울` (Seoul), `부산` (Busan), `대구` (Daegu), `인천` (Incheon), `광주` (Gwangju), `대전` (Daejeon), `울산` (Ulsan), `세종` (Sejong), `경기북부` (N. Gyeonggi), `경기남부` (S. Gyeonggi), `강원영서` (W. Gangwon), `강원영동` (E. Gangwon), `충북` (N. Chungcheong), `충남` (S. Chungcheong), `전북` (N. Jeolla), `전남` (S. Jeolla), `경북` (N. Gyeongsang), `경남` (S. Gyeongsang), `제주` (Jeju)
-
-#### 📋 The 3 data.go.kr APIs you must apply for
-
-Search the data.go.kr portal with these keywords, then click **[활용신청]** on each:
-
-| Search keyword | API name | Purpose |
-|---|---|---|
-| `에어코리아 대기오염정보` | AirKorea Air Pollution Info | 🌫️ PM10·PM2.5·O3 realtime + forecast |
-| `생활기상지수` | KMA_Living Weather Index Service | ☀️ UV / food poisoning / asthma indices |
-| `꽃가루` | KMA_Health Weather Index Service (pollen) | 🌸 Oak · pine · weeds pollen |
-
-> 💡 **One auth key works for all 3 APIs.** After 1~2 days approval, copy the encoded key from your data.go.kr My Page → set as `DATA_GO_KR_KEY`.
 
 ### 5️⃣ Enable workflow & run
 
