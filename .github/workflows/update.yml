@@ -52,9 +52,9 @@ jobs:
           LOCATION_NAME: ${{ secrets.LOCATION_NAME }}
           REG_ID_TEMP: ${{ secrets.REG_ID_TEMP }}
           REG_ID_LAND: ${{ secrets.REG_ID_LAND }}
-          # 선택 — 미세먼지 (에어코리아)
+          # 미세먼지 (공공데이터포털 / 에어코리아)
           DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
-          AIR_REGION: ${{ secrets.AIR_REGION }}
+          DATA_GO_KR_REGION: ${{ secrets.DATA_GO_KR_REGION }}
           # 선택 — 기상특보 필터
           WRN_KEYWORDS: ${{ secrets.WRN_KEYWORDS }}
           WRN_INCLUDE_WATCH: ${{ secrets.WRN_INCLUDE_WATCH }}

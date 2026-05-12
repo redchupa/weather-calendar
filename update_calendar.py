@@ -36,10 +36,10 @@ WRN_INFO = {
 
 # 미세먼지/초미세먼지 옵션 (에어코리아 via 공공데이터포털)
 # - DATA_GO_KR_KEY: 공공데이터포털 일반 인증키
-# - AIR_REGION: 에어코리아 예보 지역명 (예: '서울', '경기북부', '경기남부', '강원영서')
+# - DATA_GO_KR_REGION: 에어코리아 예보 지역명 (예: '서울', '경기북부', '경기남부', '강원영서')
 # 두 값 모두 설정해야 미세먼지 기능 활성화. 하나라도 비어 있으면 기능 비활성 (워크플로우는 정상 동작).
 DATA_GO_KR_KEY = os.environ.get('DATA_GO_KR_KEY', '').strip()
-AIR_REGION = os.environ.get('AIR_REGION', '').strip()
+DATA_GO_KR_REGION = os.environ.get('DATA_GO_KR_REGION', '').strip()
 PM_GRADE_EMOJI = {
     '좋음': '🟢',
     '보통': '🟡',
@@ -288,7 +288,7 @@ def fetch_air_forecast(now):
     반환: {'YYYYMMDD': {'PM10': '보통', 'PM25': '좋음'}, ...}
     """
     result = {}
-    if not DATA_GO_KR_KEY or not AIR_REGION:
+    if not DATA_GO_KR_KEY or not DATA_GO_KR_REGION:
         return result
     for code in ('PM10', 'PM25'):
         params = {
@@ -314,7 +314,7 @@ def fetch_air_forecast(now):
         for it in items:
             inform_date = it.get('informData', '').replace('-', '')  # 'YYYY-MM-DD' → 'YYYYMMDD'
             grade_str = it.get('informGrade', '')
-            grade = parse_inform_grade(grade_str, AIR_REGION)
+            grade = parse_inform_grade(grade_str, DATA_GO_KR_REGION)
             if not inform_date or not grade:
                 continue
             result.setdefault(inform_date, {})[code] = grade
@@ -375,12 +375,12 @@ def main():
 
     # 미세먼지/초미세먼지 예보 — 오늘/내일/모레 (있을 경우)
     air_forecast = fetch_air_forecast(now)
-    if not DATA_GO_KR_KEY or not AIR_REGION:
-        print("미세먼지 예보: DATA_GO_KR_KEY 또는 AIR_REGION 미설정 → 건너뜀")
+    if not DATA_GO_KR_KEY or not DATA_GO_KR_REGION:
+        print("미세먼지 예보: DATA_GO_KR_KEY 또는 DATA_GO_KR_REGION 미설정 → 건너뜀")
     elif air_forecast:
-        print(f"미세먼지 예보 ({AIR_REGION}): {len(air_forecast)}일치 수집")
+        print(f"미세먼지 예보 ({DATA_GO_KR_REGION}): {len(air_forecast)}일치 수집")
     else:
-        print(f"미세먼지 예보 ({AIR_REGION}): 데이터 없음 — 지역명 오타 또는 API 응답 확인 필요")
+        print(f"미세먼지 예보 ({DATA_GO_KR_REGION}): 데이터 없음 — 지역명 오타 또는 API 응답 확인 필요")
 
     cache = {'TMP': '15', 'SKY': '1', 'PTY': '0', 'REH': '50', 'WSD': '1.0', 'POP': '0'}
     for d_str in sorted(forecast_map.keys()):
