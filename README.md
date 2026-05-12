@@ -220,7 +220,6 @@ A를 마쳤다고 자동으로 폰에 뜨지 않습니다. 앱에 들어가서 *
 2. 본인 레포의 `weather.ics` 파일에 데이터가 들어있는지 확인
 3. **PC 웹에선 보이는데 폰에선 안 보이는 경우 → [7️⃣ 모바일 앱에서 보이지 않을 때](#7%EF%B8%8F%E2%83%A3--모바일-앱에서-보이지-않을-때-꼭-확인) 섹션 참고** (Google Sync Select 누락이 가장 흔한 원인)
 4. 캘린더 앱 동기화 주기 — Google 캘린더는 URL 구독을 **8~24시간 간격**으로 갱신합니다
-5. ICS의 표준 호환성 — 이 코드는 `VERSION` / `PRODID` / `DTSTAMP` 같은 RFC 5545 필수 필드가 빠져 있어서 일부 캘린더에서 안 보일 수 있습니다 (개선 예정)
 </details>
 
 <details>
@@ -245,17 +244,14 @@ A를 마쳤다고 자동으로 폰에 뜨지 않습니다. 앱에 들어가서 *
 
 ---
 
-## ⏰ 자동 갱신 활성화 (선택)
+## ⏰ 자동 갱신
 
-기본적으로 [.github/workflows/update.yml](.github/workflows/update.yml) 의 `schedule:` 트리거는 **주석 처리**되어 있어, 워크플로우는 수동 실행(`workflow_dispatch`) 이나 `push` 시에만 동작합니다.
+기본적으로 [.github/workflows/update.yml](.github/workflows/update.yml) 의 `schedule:` 이 **활성화**되어 있어 워크플로우는 다음 시점에 자동으로 실행됩니다 (KST 기준):
 
-매 3시간 자동 갱신을 원하면 다음 두 줄의 `#` 을 제거하고 커밋하세요:
+| 시각 | 02:15 | 05:15 | 08:15 | 11:15 | 14:15 | 17:15 | 20:15 | 23:15 |
+|---|---|---|---|---|---|---|---|---|
 
-```yaml
-on:
-  schedule:
-    - cron: '15 17,20,23,2,5,8,11,14 * * *'   # KST 기준 매 3시간 (UTC 변환됨)
-```
+기상청 단기예보 발표 시각(매 3시간) 직후를 노린 스케줄입니다. 자동 갱신이 필요 없으면 워크플로우 파일의 `schedule:` 블록을 주석 처리하면 됩니다.
 
 > ⚠️ 단, 구독한 캘린더 앱은 ICS URL을 **자체 캐시 주기(보통 8~24시간)** 에 따라 갱신합니다. 소스가 매 3시간 업데이트돼도, 클라이언트 반영은 그보다 느릴 수 있어요.
 
@@ -263,8 +259,8 @@ on:
 
 ## 🛠 기술 스택
 
-- **Python 3.9** — `requests`, `pytz`, `icalendar`
-- **GitHub Actions** — 스케줄 또는 `repository_dispatch` 로 트리거
+- **Python 3.12** — `requests`, `pytz`, `icalendar` (의존성은 [requirements.txt](requirements.txt))
+- **GitHub Actions** — cron(매 3시간) / `repository_dispatch` / `workflow_dispatch` 트리거
 - **기상청 API 허브** — `VilageFcstInfoService_2.0`, `MidFcstInfoService`
 
 ## 📂 파일 구조
@@ -272,9 +268,12 @@ on:
 ```
 .
 ├── update_calendar.py        # KMA API → ICS 생성 스크립트
+├── requirements.txt          # Python 의존성 명세
 ├── weather.ics               # 생성된 캘린더 파일 (Raw URL 구독 대상)
 ├── .github/workflows/
 │   └── update.yml            # 워크플로우 정의
+├── .gitignore
+├── LICENSE
 └── docs/                     # GitHub Pages 설정 가이드
     ├── index.html
     ├── region_codes.json
