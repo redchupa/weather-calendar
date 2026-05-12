@@ -45,12 +45,19 @@ jobs:
       - name: Run update script
         id: weather
         env:
+          # 필수
           KMA_API_KEY: ${{ secrets.KMA_API_KEY }}
           KMA_NX: ${{ secrets.KMA_NX }}
           KMA_NY: ${{ secrets.KMA_NY }}
           LOCATION_NAME: ${{ secrets.LOCATION_NAME }}
           REG_ID_TEMP: ${{ secrets.REG_ID_TEMP }}
           REG_ID_LAND: ${{ secrets.REG_ID_LAND }}
+          # 선택 — 미세먼지 (에어코리아)
+          DATA_GO_KR_KEY: ${{ secrets.DATA_GO_KR_KEY }}
+          AIR_REGION: ${{ secrets.AIR_REGION }}
+          # 선택 — 기상특보 필터
+          WRN_KEYWORDS: ${{ secrets.WRN_KEYWORDS }}
+          WRN_INCLUDE_WATCH: ${{ secrets.WRN_INCLUDE_WATCH }}
           TZ: Asia/Seoul
         run: python update_calendar.py
 

@@ -34,6 +34,18 @@ WRN_INFO = {
     'F': ('🌫️', '안개'),
 }
 
+# 미세먼지/초미세먼지 옵션 (에어코리아 via 공공데이터포털)
+# - DATA_GO_KR_KEY: 공공데이터포털 일반 인증키 (없으면 미세먼지 기능 비활성화)
+# - AIR_REGION: 에어코리아 예보 지역명 (예: '서울', '경기남부', '강원영서')
+DATA_GO_KR_KEY = os.environ.get('DATA_GO_KR_KEY', '')
+AIR_REGION = os.environ.get('AIR_REGION', '서울')
+PM_GRADE_EMOJI = {
+    '좋음': '🟢',
+    '보통': '🟡',
+    '나쁨': '🟠',
+    '매우나쁨': '🔴',
+}
+
 def get_weather_info(sky, pty):
     sky, pty = str(sky), str(pty)
     if pty == '1': return "🌧️", "비"
@@ -255,6 +267,58 @@ def parse_kma_time(s):
             continue
     return None
 
+def parse_inform_grade(grade_str, region):
+    """에어코리아 informGrade 문자열에서 region 등급 추출.
+    포맷: '서울 : 보통,제주 : 보통,...'"""
+    if not grade_str:
+        return None
+    for chunk in grade_str.split(','):
+        parts = chunk.split(':')
+        if len(parts) != 2:
+            continue
+        area, level = parts[0].strip(), parts[1].strip()
+        if area == region:
+            return level
+    return None
+
+def fetch_air_forecast(now):
+    """에어코리아 대기오염예보 — PM10/PM25 등급을 날짜별로 반환.
+
+    반환: {'YYYYMMDD': {'PM10': '보통', 'PM25': '좋음'}, ...}
+    """
+    result = {}
+    if not DATA_GO_KR_KEY:
+        return result
+    for code in ('PM10', 'PM25'):
+        params = {
+            'serviceKey': DATA_GO_KR_KEY,
+            'returnType': 'json',
+            'numOfRows': 10,
+            'pageNo': 1,
+            'searchDate': '',
+            'informCode': code,
+        }
+        try:
+            res = requests.get(
+                'https://apis.data.go.kr/B552584/ArpltnInforInqireSvc/getMinuDustFrcstDspth',
+                params=params, timeout=15)
+            if res.status_code != 200:
+                print(f"[WARN] 에어코리아 {code} HTTP {res.status_code}")
+                continue
+            data = res.json()
+        except (requests.exceptions.RequestException, ValueError) as e:
+            print(f"[WARN] 에어코리아 {code} 요청 실패: {e}")
+            continue
+        items = (data.get('response', {}).get('body', {}) or {}).get('items') or []
+        for it in items:
+            inform_date = it.get('informData', '').replace('-', '')  # 'YYYY-MM-DD' → 'YYYYMMDD'
+            grade_str = it.get('informGrade', '')
+            grade = parse_inform_grade(grade_str, AIR_REGION)
+            if not inform_date or not grade:
+                continue
+            result.setdefault(inform_date, {})[code] = grade
+    return result
+
 def main():
     seoul_tz = pytz.timezone('Asia/Seoul')
     now = datetime.now(seoul_tz)
@@ -308,6 +372,11 @@ def main():
     if ultra_count:
         print(f"초단기예보 적용: {ultra_count}개 값 갱신")
 
+    # 미세먼지/초미세먼지 예보 — 오늘/내일/모레 (있을 경우)
+    air_forecast = fetch_air_forecast(now)
+    if air_forecast:
+        print(f"미세먼지 예보 ({AIR_REGION}): {len(air_forecast)}일치 수집")
+
     cache = {'TMP': '15', 'SKY': '1', 'PTY': '0', 'REH': '50', 'WSD': '1.0', 'POP': '0'}
     for d_str in sorted(forecast_map.keys()):
         if d_str < today_str or d_str > short_end_str:
@@ -339,9 +408,20 @@ def main():
                 desc.append(f"[{t_str[:2]}시] {emoji} {wf_str} {cache['TMP']}°C ({' '.join(details)})")
                 has_future_data = True
         if not has_future_data: continue
+        # 미세먼지 정보 (있으면 summary/description에 추가)
+        air_today = air_forecast.get(d_str, {})
+        pm10_grade = air_today.get('PM10')
+        pm25_grade = air_today.get('PM25')
+        pm10_em = PM_GRADE_EMOJI.get(pm10_grade, '')
+        pm25_em = PM_GRADE_EMOJI.get(pm25_grade, '')
+        summary_suffix = ""
+        if pm10_em or pm25_em:
+            summary_suffix = f" {pm10_em}{pm25_em}"
+            desc.insert(0, f"🌫️ 미세 {pm10_em} {pm10_grade or '-'} / 초미세 {pm25_em} {pm25_grade or '-'}\n")
+
         event = Event()
         event.add('dtstamp', now)
-        event.add('summary', f"{rep_emoji} {t_min}°C/{t_max}°C")
+        event.add('summary', f"{rep_emoji} {t_min}°C/{t_max}°C{summary_suffix}")
         event.add('location', LOCATION_NAME)
         desc.append(f"\n최종 업데이트: {update_ts} (KST)")
         event.add('description', "\n".join(desc))
