@@ -277,15 +277,39 @@ def filter_warnings(warnings):
         out.append(w)
     return out
 
+def _parse_kma_csv(text):
+    """KMA apihub typ01 응답(disp=1 CSV) → 헤더+행 리스트.
+    헤더가 #로 시작하는 마지막 행에 변수명이 있음."""
+    rows = []
+    headers = []
+    for line in text.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        if line.startswith('#'):
+            # 변수명 헤더 후보 (콤마 다수 포함)
+            inner = line.lstrip('#').strip()
+            if inner.count(',') >= 3:
+                headers = [h.strip() for h in inner.split(',')]
+            continue
+        parts = [p.strip().strip('"') for p in line.split(',')]
+        if not parts:
+            continue
+        rows.append(parts)
+    return headers, rows
+
+
 def fetch_earthquakes(now):
-    """KMA apihub 지진통보문 — 최근 24시간 내 지진 목록.
-    반환: [{'tm': datetime, 'lat': float, 'lon': float, 'mag': float, 'loc': str, 'intensity': str}, ...]
+    """KMA apihub 지진 목록 (eqk_list.php). 최근 7일 + 규모 ≥ 2.0.
+
+    출력 필드 (KMA spec): TP(3=국내,2=국외), TM_FC(발표), SEQ, TM_EQK(진앙시),
+    MSC, MT(규모), LAT, LON, LOC, INT(진도), REM, COR
     """
     results = []
     tm_to = now.strftime('%Y%m%d%H%M')
-    tm_from = (now - timedelta(days=1)).strftime('%Y%m%d%H%M')
+    tm_from = (now - timedelta(days=7)).strftime('%Y%m%d%H%M')
     url = (
-        f"https://apihub.kma.go.kr/api/typ01/url/eqk_web.php"
+        "https://apihub.kma.go.kr/api/typ01/url/eqk_list.php"
         f"?tm1={tm_from}&tm2={tm_to}&disp=1&help=0&authKey={API_KEY}"
     )
     try:
@@ -297,34 +321,61 @@ def fetch_earthquakes(now):
     except requests.exceptions.RequestException as e:
         print(f"[WARN] 지진 요청 실패: {e}")
         return results
-    for line in text.splitlines():
-        line = line.strip()
-        if not line or line.startswith('#'):
-            continue
-        parts = [p.strip().strip('"') for p in line.split(',')]
-        if len(parts) < 6:
+
+    headers, rows = _parse_kma_csv(text)
+    # 필드 인덱스 추정 (헤더 없으면 KMA spec 순서대로 fallback)
+    def idx(name, default):
+        try:
+            return headers.index(name)
+        except ValueError:
+            return default
+    i_tp, i_tmeqk = idx('TP', 0), idx('TM_EQK', 3)
+    i_mt, i_lat, i_lon = idx('MT', 5), idx('LAT', 6), idx('LON', 7)
+    i_loc, i_int = idx('LOC', 8), idx('INT', 9)
+
+    seen = set()
+    for parts in rows:
+        if len(parts) <= max(i_tmeqk, i_mt, i_lat, i_lon, i_loc):
             continue
         try:
-            tm_dt = parse_kma_time(parts[0])
-            lat = float(parts[1]); lon = float(parts[2]); mag = float(parts[3])
-            loc = parts[4] if len(parts) > 4 else ''
-            intensity = parts[5] if len(parts) > 5 else ''
-            if tm_dt and mag >= 2.0:
-                results.append({
-                    'tm': tm_dt, 'lat': lat, 'lon': lon,
-                    'mag': mag, 'loc': loc, 'intensity': intensity,
-                })
+            tp = parts[i_tp] if i_tp < len(parts) else ''
+            tm_dt = parse_kma_time(parts[i_tmeqk])
+            mag = float(parts[i_mt])
+            lat = float(parts[i_lat])
+            lon = float(parts[i_lon])
+            loc = parts[i_loc] if i_loc < len(parts) else ''
+            intensity = parts[i_int] if i_int < len(parts) else ''
         except (ValueError, IndexError):
             continue
+        if not tm_dt or mag < 2.0:
+            continue
+        # 중복 제거 (같은 시각+규모)
+        key = (tm_dt.isoformat(), round(mag, 1))
+        if key in seen:
+            continue
+        seen.add(key)
+        results.append({
+            'tp': tp, 'tm': tm_dt, 'lat': lat, 'lon': lon,
+            'mag': mag, 'loc': loc, 'intensity': intensity,
+        })
     return results
 
 
 def fetch_typhoons(now):
-    """KMA apihub 태풍정보 — 현재 활성 태풍 목록.
-    반환: [{'name': str, 'lat': float, 'lon': float, 'pressure': float, 'wind': float, 'tm': datetime}, ...]
+    """KMA apihub typ_now.php — 기준시간 과거 12h 내 활성 태풍의 최근 분석+예측.
+
+    출력 필드 (KMA spec): YY, SEQ, NOW(Y/N=진행여부), EFF(Y/N=한반도영향),
+    TM_ST, TM_ED, TYP_NAME, TYP_EN, REM,
+    FT(0=분석,1=예측), TYP, TMD, TYP_TM, FT_TM,
+    LAT, LON, DIR(16방위), SP(km/h), PS(hPa), WS(m/s), RAD15, RAD25, RAD, LOC
     """
     results = []
-    url = f"https://apihub.kma.go.kr/api/typ01/url/typ_dpr_now.php?disp=1&help=0&authKey={API_KEY}"
+    # tm: UTC 기준
+    tm_utc = now.astimezone(pytz.UTC).strftime('%Y%m%d%H00')
+    url = (
+        "https://apihub.kma.go.kr/api/typ01/url/typ_now.php"
+        f"?tm={tm_utc}&mode=2&disp=1&help=0&authKey={API_KEY}"
+    )
     try:
         res = requests.get(url, timeout=15)
         if res.status_code != 200:
@@ -334,27 +385,54 @@ def fetch_typhoons(now):
     except requests.exceptions.RequestException as e:
         print(f"[WARN] 태풍 요청 실패: {e}")
         return results
-    for line in text.splitlines():
-        line = line.strip()
-        if not line or line.startswith('#'):
-            continue
-        parts = [p.strip().strip('"') for p in line.split(',')]
-        if len(parts) < 5:
+
+    headers, rows = _parse_kma_csv(text)
+    def idx(name, default):
+        try:
+            return headers.index(name)
+        except ValueError:
+            return default
+    i_now, i_eff = idx('NOW', 2), idx('EFF', 3)
+    i_name, i_ft = idx('TYP_NAME', 6), idx('FT', 9)
+    i_lat, i_lon = idx('LAT', 14), idx('LON', 15)
+    i_dir, i_sp = idx('DIR', 16), idx('SP', 17)
+    i_ps, i_ws = idx('PS', 18), idx('WS', 19)
+    i_loc = idx('LOC', 23)
+    i_typtm = idx('TYP_TM', 12)
+
+    # 활성 태풍별로 분석값 1개 + 예측값들 그룹화
+    typhoons = {}
+    for parts in rows:
+        if len(parts) <= max(i_lon, i_ws):
             continue
         try:
-            tm_dt = parse_kma_time(parts[0])
-            name = parts[1] if len(parts) > 1 else ''
-            lat = float(parts[2]) if parts[2] else 0
-            lon = float(parts[3]) if parts[3] else 0
-            pressure = float(parts[4]) if parts[4] else 0
-            wind = float(parts[5]) if len(parts) > 5 and parts[5] else 0
-            results.append({
-                'tm': tm_dt, 'name': name, 'lat': lat, 'lon': lon,
-                'pressure': pressure, 'wind': wind,
+            is_active = (parts[i_now] if i_now < len(parts) else '') == 'Y'
+            ft = parts[i_ft] if i_ft < len(parts) else ''
+            name = parts[i_name] if i_name < len(parts) else ''
+            if not is_active or not name:
+                continue
+            entry = typhoons.setdefault(name, {
+                'name': name,
+                'eff': (parts[i_eff] if i_eff < len(parts) else '') == 'Y',
+                'analysis': None, 'forecast': [],
             })
+            point = {
+                'tm': parse_kma_time(parts[i_typtm]) if i_typtm < len(parts) else None,
+                'lat': float(parts[i_lat]) if parts[i_lat] else 0,
+                'lon': float(parts[i_lon]) if parts[i_lon] else 0,
+                'dir': parts[i_dir] if i_dir < len(parts) else '',
+                'sp': float(parts[i_sp]) if i_sp < len(parts) and parts[i_sp] else 0,
+                'ps': float(parts[i_ps]) if i_ps < len(parts) and parts[i_ps] else 0,
+                'ws': float(parts[i_ws]) if i_ws < len(parts) and parts[i_ws] else 0,
+                'loc': parts[i_loc] if i_loc < len(parts) else '',
+            }
+            if ft == '0':
+                entry['analysis'] = point
+            else:
+                entry['forecast'].append(point)
         except (ValueError, IndexError):
             continue
-    return results
+    return list(typhoons.values())
 
 
 def parse_kma_time(s):
@@ -1255,20 +1333,24 @@ def main():
 
     # --- [6. 지진] ---
     quakes = fetch_earthquakes(now)
-    print(f"지진: 최근 24h 내 {len(quakes)}건 (규모 ≥ 2.0)")
+    print(f"지진: 최근 7일 내 {len(quakes)}건 (규모 ≥ 2.0)")
     quake_count = 0
     for q in quakes:
         if q['mag'] < 3.0:
             continue  # 캘린더엔 규모 3.0 이상만
         tm_local = seoul_tz.localize(q['tm']) if q['tm'].tzinfo is None else q['tm']
+        # 국내(TP=3) 강조
+        emoji = '🚨🌋' if q['tp'] == '3' else '🌋'
+        kind = '국내' if q['tp'] == '3' else '국외'
         ev = Event()
         ev.add('dtstamp', now)
-        ev.add('summary', f"🌋 지진 M{q['mag']:.1f} ({q['loc']})")
+        ev.add('summary', f"{emoji} {kind}지진 M{q['mag']:.1f} ({q['loc']})")
         desc = [
             f"발생: {tm_local.strftime('%Y-%m-%d %H:%M')} (KST)",
+            f"종류: {kind}지진",
             f"규모: M{q['mag']:.1f}",
             f"위치: {q['loc']}",
-            f"위경도: {q['lat']:.2f}, {q['lon']:.2f}",
+            f"위경도: {q['lat']:.3f}, {q['lon']:.3f}",
         ]
         if q['intensity']:
             desc.append(f"진도: {q['intensity']}")
@@ -1277,7 +1359,7 @@ def main():
         ev.add('location', q['loc'])
         ev.add('dtstart', tm_local.date())
         ev.add('dtend', tm_local.date() + timedelta(days=1))
-        ev.add('uid', f"eqk-{tm_local.strftime('%Y%m%d%H%M%S')}-{q['mag']}@kma")
+        ev.add('uid', f"eqk-{tm_local.strftime('%Y%m%d%H%M%S')}-{int(q['mag']*10)}@kma")
         ev.add('categories', 'EARTHQUAKE')
         cal.add_component(ev)
         quake_count += 1
@@ -1287,19 +1369,36 @@ def main():
     print(f"태풍: 현재 활성 {len(typhoons)}건")
     typhoon_count = 0
     for t in typhoons:
-        if not t.get('name'):
-            continue
+        analysis = t.get('analysis')
+        forecasts = t.get('forecast', [])
+        if not analysis:
+            # 분석값 없으면 예측 첫 항목으로 대체
+            if not forecasts:
+                continue
+            analysis = forecasts[0]
+        # 한반도 영향 여부 강조
+        eff_emoji = '🚨🌀' if t['eff'] else '🌀'
+        eff_text = '한반도 영향' if t['eff'] else '북서태평양'
         ev = Event()
         ev.add('dtstamp', now)
-        ev.add('summary', f"🌀 태풍 {t['name']} ({t['wind']:.0f}m/s)")
+        ev.add('summary', f"{eff_emoji} 태풍 {t['name']} {analysis['ws']:.0f}m/s ({eff_text})")
         desc = [
             f"태풍명: {t['name']}",
-            f"중심기압: {t['pressure']:.0f}hPa",
-            f"최대풍속: {t['wind']:.1f}m/s",
-            f"위치: lat {t['lat']:.2f}, lon {t['lon']:.2f}",
-            f"관측시각: {t['tm'].strftime('%Y-%m-%d %H:%M') if t['tm'] else '-'} (KST)",
-            f"\n최종 업데이트: {update_ts} (KST)",
+            f"한반도 영향: {'예' if t['eff'] else '아니오 (현재 기준)'}",
+            f"현재 위치: lat {analysis['lat']:.2f}, lon {analysis['lon']:.2f}",
         ]
+        if analysis.get('loc'):
+            desc.append(f"위치명: {analysis['loc']}")
+        desc.append(f"중심기압: {analysis['ps']:.0f} hPa")
+        desc.append(f"최대풍속: {analysis['ws']:.1f} m/s")
+        if analysis.get('dir') and analysis.get('sp'):
+            desc.append(f"진행방향/속도: {analysis['dir']} 방향 {analysis['sp']:.0f} km/h")
+        if forecasts:
+            desc.append("\n📍 예측 진로:")
+            for fp in forecasts[:6]:  # 최대 6개 시각만
+                if fp.get('tm'):
+                    desc.append(f"  · {fp['tm'].strftime('%m/%d %H시')} UTC → lat {fp['lat']:.1f}, lon {fp['lon']:.1f}, {fp['ws']:.0f}m/s")
+        desc.append(f"\n최종 업데이트: {update_ts} (KST)")
         ev.add('description', "\n".join(desc))
         ev.add('dtstart', now.date())
         ev.add('dtend', now.date() + timedelta(days=1))
