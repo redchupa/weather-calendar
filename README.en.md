@@ -31,8 +31,6 @@ This project pulls weather forecasts from the Korea Meteorological Administratio
 | 🆘 **Stuck?** | Each step lists common gotchas. Open an [Issue](https://github.com/redchupa/weather-calendar/issues) if needed. |
 | 💡 **Trickiest parts** | Registering 9 secrets correctly + mobile sync. Both covered in detail. |
 
-> 💪 **Pep talk**: Take a break when stuck and come back — the answer usually surfaces. Just one or two hurdles, then it's smooth sailing.
-
 ---
 
 ## 🚀 Step-by-step setup
