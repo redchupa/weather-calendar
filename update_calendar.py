@@ -37,15 +37,27 @@ def get_mid_emoji(wf):
     if '맑음' in wf: return "☀️"
     return "☀️"
 
-def fetch_api(url):
+def fetch_api(url, label=""):
     try:
         res = requests.get(url, timeout=15)
-        if res.status_code == 200:
-            data = res.json()
-            if data.get('response', {}).get('header', {}).get('resultCode') == '00':
-                return data
+        if res.status_code != 200:
+            print(f"[WARN] {label or 'API'} HTTP {res.status_code}: {res.text[:200]}")
+            return None
+        data = res.json()
+        result_code = data.get('response', {}).get('header', {}).get('resultCode')
+        if result_code != '00':
+            msg = data.get('response', {}).get('header', {}).get('resultMsg', 'unknown')
+            print(f"[WARN] {label or 'API'} resultCode={result_code} ({msg})")
+            return None
+        return data
+    except requests.exceptions.Timeout:
+        print(f"[WARN] {label or 'API'} timeout (15s)")
         return None
-    except:
+    except requests.exceptions.RequestException as e:
+        print(f"[WARN] {label or 'API'} request failed: {e}")
+        return None
+    except ValueError as e:
+        print(f"[WARN] {label or 'API'} JSON parse failed: {e}")
         return None
 
 def get_base_datetime(now):
@@ -91,8 +103,8 @@ def load_cached_events(ics_path):
                     if hasattr(d, 'strftime'):
                         d_str = d.strftime('%Y%m%d')
                         cache[d_str] = component.to_ical()
-    except:
-        pass
+    except (IOError, ValueError) as e:
+        print(f"[WARN] cached ics parse failed: {e}")
     return cache
 
 def event_from_cache(raw_ical):
@@ -103,8 +115,8 @@ def event_from_cache(raw_ical):
         for component in cal.walk():
             if component.name == 'VEVENT':
                 return component
-    except:
-        pass
+    except ValueError as e:
+        print(f"[WARN] event cache parse failed: {e}")
     return None
 
 def main():
@@ -119,6 +131,10 @@ def main():
     mid_end_dt    = today_dt + timedelta(days=10)                       # D+10까지
 
     cal = Calendar()
+    cal.add('prodid', '-//redchupa//weather-calendar//KR')
+    cal.add('version', '2.0')
+    cal.add('calscale', 'GREGORIAN')
+    cal.add('method', 'PUBLISH')
     cal.add('X-WR-CALNAME', '기상청 날씨')
     cal.add('X-WR-TIMEZONE', 'Asia/Seoul')
     processed_dates = set()
@@ -135,7 +151,7 @@ def main():
         f"&nx={NX}&ny={NY}&numOfRows=1000&authKey={API_KEY}"
     )
     forecast_map = {}
-    short_res = fetch_api(url_short)
+    short_res = fetch_api(url_short, label="단기예보")
     if short_res and 'body' in short_res['response']:
         for it in short_res['response']['body']['items']['item']:
             d, t, cat, val = it['fcstDate'], it['fcstTime'], it['category'], it['fcstValue']
@@ -175,6 +191,7 @@ def main():
                 has_future_data = True
         if not has_future_data: continue
         event = Event()
+        event.add('dtstamp', now)
         event.add('summary', f"{rep_emoji} {t_min}°C/{t_max}°C")
         event.add('location', LOCATION_NAME)
         desc.append(f"\n최종 업데이트: {update_ts} (KST)")
@@ -207,8 +224,8 @@ def main():
             f"https://apihub.kma.go.kr/api/typ02/openApi/MidFcstInfoService/getMidLandFcst"
             f"?dataType=JSON&regId={REG_ID_LAND}&tmFc={tm_fc_str}&authKey={API_KEY}"
         )
-        t_try = fetch_api(url_mid_temp)
-        l_try = fetch_api(url_mid_land)
+        t_try = fetch_api(url_mid_temp, label=f"중기기온@{tm_fc_str}")
+        l_try = fetch_api(url_mid_land, label=f"중기육상@{tm_fc_str}")
         if t_try and l_try:
             t_res, l_res, tm_fc_dt = t_try, l_try, candidate
             break
@@ -250,6 +267,7 @@ def main():
                 mid_desc.append(f"\n최종 업데이트: {update_ts} (KST)")
 
                 event = Event()
+                event.add('dtstamp', now)
                 event.add('summary', f"{get_mid_emoji(wf_rep)} {t_min}/{t_max}°C")
                 event.add('location', LOCATION_NAME)
                 event.add('description', "\n".join(mid_desc))
@@ -270,6 +288,26 @@ def main():
     print("최종 processed_dates:", sorted(processed_dates))
     with open('weather.ics', 'wb') as f:
         f.write(cal.to_ical())
+
+    # 오늘 날씨 요약을 워크플로우 commit message용으로 노출
+    today_summary = ""
+    if today_str in forecast_map:
+        day_data = forecast_map[today_str]
+        tmps = [float(day_data[t]['TMP']) for t in day_data if 'TMP' in day_data[t]]
+        if tmps:
+            t_min, t_max = int(min(tmps)), int(max(tmps))
+            rep_t = '1200' if '1200' in day_data else sorted(day_data.keys())[0]
+            rep_emoji, rep_label = get_weather_info(
+                day_data[rep_t].get('SKY', '1'),
+                day_data[rep_t].get('PTY', '0')
+            )
+            today_summary = f"{rep_emoji} {rep_label} {t_min}/{t_max}°C"
+            print(f"오늘 요약: {today_summary}")
+
+    gh_output = os.environ.get('GITHUB_OUTPUT')
+    if gh_output and today_summary:
+        with open(gh_output, 'a', encoding='utf-8') as f:
+            f.write(f"summary={today_summary}\n")
 
 if __name__ == "__main__":
     main()
