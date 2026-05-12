@@ -157,12 +157,13 @@
             <strong>⏳ 첫 실행 확인하기</strong><br>
             활성화 후 왼쪽 목록에서 <b>Update Weather ICS</b>를 선택하고, <b>Run workflow</b>를 눌러 수동으로 한 번 실행해 보세요.
         </div>
-        <div class="info-box" style="background: #fef9c3; border-color: #fde68a;">
-            <strong>🕒 정기 자동 실행을 원한다면</strong><br>
-            기본값으로는 <code>.github/workflows/update.yml</code> 의 <code>schedule:</code> 부분이 주석 처리되어 있습니다. 매 3시간마다 자동 갱신하려면 해당 두 줄의 <code>#</code> 을 제거하고 커밋하세요.
-            <pre style="background:#fff;border:1px solid #e2e8f0;padding:10px;border-radius:8px;margin-top:10px;font-size:0.85em;overflow:auto;">on:
+        <div class="info-box" style="background: #ecfdf5; border-color: #a7f3d0;">
+            <strong>✅ 정기 자동 실행 기본 활성화</strong><br>
+            <code>.github/workflows/update.yml</code> 의 <code>schedule:</code> 트리거가 <b>기본으로 켜져 있어서</b>, 첫 활성화 이후 KST 기준 매 3시간(02·05·08·11·14·17·20·23시)마다 자동으로 ICS를 갱신합니다. 추가 설정 필요 없음.
+            <pre style="background:#fff;border:1px solid #d1fae5;padding:10px;border-radius:8px;margin-top:10px;font-size:0.85em;overflow:auto;">on:
   schedule:
-    - cron: '15 17,20,23,2,5,8,11,14 * * *'</pre>
+    - cron: '15 17,20,23,2,5,8,11,14 * * *'   # KST 기준 매 3시간</pre>
+            <p style="font-size:0.85em; margin-top:8px; color:#047857;">💡 자동 실행을 끄고 싶으면 위 두 줄을 <code>#</code> 으로 주석 처리하면 됩니다.</p>
         </div>
     </div>
 
