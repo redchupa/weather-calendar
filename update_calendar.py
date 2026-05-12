@@ -604,22 +604,20 @@ def fetch_air_forecast(now):
             print(f"[WARN] 에어코리아 {code} 요청 실패: {e}")
             continue
         items = (data.get('response', {}).get('body', {}) or {}).get('items') or []
-        if not items:
-            print(f"[DIAG] 에어코리아 {code} items 비어 있음. header={data.get('response',{}).get('header')}")
-            continue
+        # 무조건 진단 출력 (한 번에 응답 구조 파악)
+        first_grade = items[0].get('informGrade', '(no informGrade key)')[:300] if items else '(empty items)'
+        print(f"[DIAG-AIR] {code} status={res.status_code} items={len(items)} firstGrade={first_grade!r}")
+        matched_any = False
         for it in items:
-            inform_date = it.get('informData', '').replace('-', '')  # 'YYYY-MM-DD' → 'YYYYMMDD'
+            inform_date = it.get('informData', '').replace('-', '')
             grade_str = it.get('informGrade', '')
             grade = parse_inform_grade(grade_str, DATA_GO_KR_REGION)
-            if not inform_date:
-                continue
-            if not grade:
-                # 매칭 실패 시 처음 한 번만 진단 출력
-                if code not in [k for k in result.keys() if False]:  # 항상 첫 실패 출력
-                    sample = grade_str[:200] if grade_str else '(empty)'
-                    print(f"[DIAG] {code} '{DATA_GO_KR_REGION}' 매칭 실패. informGrade 샘플: {sample}")
+            if not inform_date or not grade:
                 continue
             result.setdefault(inform_date, {})[code] = grade
+            matched_any = True
+        if items and not matched_any:
+            print(f"[DIAG-AIR] {code} '{DATA_GO_KR_REGION}' 가 어떤 항목에도 매칭 안됨")
     return result
 
 def main():
