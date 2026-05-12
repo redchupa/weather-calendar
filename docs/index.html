@@ -39,6 +39,31 @@
         /* 언어별 표시 토글 */
         html[lang="ko"] [data-lang="en"] { display: none !important; }
         html[lang="en"] [data-lang="ko"] { display: none !important; }
+
+        /* 후원 섹션 (flex 기반 반응형) */
+        .sponsor-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; margin: 20px 0; }
+        .sponsor-item { text-align: center; min-width: 200px; }
+        .sponsor-item img { width: 200px; max-width: 100%; border-radius: 8px; margin-top: 8px; }
+
+        /* 히어로 이미지 (반응형 — 좁은 화면에서 세로 정렬) */
+        .hero-images { text-align: center; margin-bottom: 30px; }
+        .hero-images img { width: 260px; max-width: 100%; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin: 8px 4px; cursor: zoom-in; vertical-align: top; }
+
+        /* 모바일 반응형 */
+        @media (max-width: 640px) {
+            body { padding: 12px; }
+            h1 { font-size: 1.5em; }
+            h2 { font-size: 1.2em; }
+            .card { padding: 18px; margin-bottom: 18px; }
+            #langToggle { top: 10px; right: 10px; padding: 5px 10px; font-size: 0.8em; }
+            /* 표가 가로 스크롤 가능하도록 */
+            table { font-size: 0.85em; display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            th, td { padding: 6px 8px !important; }
+            pre { font-size: 0.78em; }
+            .hero-images img { width: 45vw; max-width: 200px; }
+            .sponsor-item { min-width: 0; flex: 0 0 100%; }
+            .sponsor-item img { width: 220px; }
+        }
     </style>
 </head>
 <body>
@@ -57,9 +82,9 @@
         Below is the original Korean guide with the auto-calculator (Step 3) and screenshots — useful even if you don't read Korean.
     </p>
 
-    <div style="text-align:center; margin-bottom: 30px;">
-        <img src="./preview-mobile.png" alt="모바일 캘린더 적용 예시 (날짜 셀)" style="width:260px; max-width:42%; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1); margin: 0 4px; cursor:zoom-in; vertical-align:top;" onclick="openModal(this.src)">
-        <img src="./calendar.png" alt="모바일 캘린더 적용 예시 (월 뷰)" style="width:260px; max-width:42%; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1); margin: 0 4px; cursor:zoom-in; vertical-align:top;" onclick="openModal(this.src)">
+    <div class="hero-images">
+        <img src="./preview-mobile.png" alt="모바일 캘린더 적용 예시 (날짜 셀)" onclick="openModal(this.src)">
+        <img src="./calendar.png" alt="모바일 캘린더 적용 예시 (월 뷰)" onclick="openModal(this.src)">
         <p style="font-size:0.9em; color:#64748b; margin-top:12px;">
             <span data-lang="ko">📱 실제 폰에서 적용된 모습 — 매일 날짜 칸에 날씨 이모지 + 최저/최고 기온</span>
             <span data-lang="en">📱 Actual phone view — weather emoji + min/max temp in each date cell</span>
@@ -363,18 +388,16 @@
         <h2 style="justify-content:center;">☕ <span data-lang="ko">후원</span><span data-lang="en">Sponsor</span></h2>
         <p data-lang="ko">이 프로젝트가 도움이 되셨다면 커피 한 잔으로 응원해주세요! 🙏</p>
         <p data-lang="en">If this project helps you, buy me a coffee! 🙏</p>
-        <table style="margin:20px auto; border:none;">
-            <tr>
-                <td style="text-align:center; padding:0 20px;">
-                    <b><span data-lang="ko">토스</span><span data-lang="en">Toss</span></b><br>
-                    <img src="https://raw.githubusercontent.com/redchupa/kr_component_kit/main/images/toss-donation.png" alt="Toss donation QR" width="200" style="margin-top:8px; border-radius:8px;">
-                </td>
-                <td style="text-align:center; padding:0 20px;">
-                    <b>PayPal</b><br>
-                    <img src="https://raw.githubusercontent.com/redchupa/kr_component_kit/main/images/paypal-donation.png" alt="PayPal donation QR" width="200" style="margin-top:8px; border-radius:8px;">
-                </td>
-            </tr>
-        </table>
+        <div class="sponsor-grid">
+            <div class="sponsor-item">
+                <b><span data-lang="ko">토스</span><span data-lang="en">Toss</span></b><br>
+                <img src="https://raw.githubusercontent.com/redchupa/kr_component_kit/main/images/toss-donation.png" alt="Toss donation QR">
+            </div>
+            <div class="sponsor-item">
+                <b>PayPal</b><br>
+                <img src="https://raw.githubusercontent.com/redchupa/kr_component_kit/main/images/paypal-donation.png" alt="PayPal donation QR">
+            </div>
+        </div>
     </div>
 
 
