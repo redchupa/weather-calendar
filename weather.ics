@@ -6,35 +6,6 @@ METHOD:PUBLISH
 X-WR-CALNAME:기상청 날씨
 X-WR-TIMEZONE:Asia/Seoul
 BEGIN:VEVENT
-SUMMARY:☁️ 24°C/27°C 🟠🟠
-DTSTART;VALUE=DATE:20260703
-DTEND;VALUE=DATE:20260704
-DTSTAMP:20260703T104957Z
-UID:20260703@short_summary
-DESCRIPTION:📍 은계 날씨 (위경도 37.443\, 126.813)\n\n☁️ 지
- 금 날씨: 흐림\n기온: 24°C (☀️ 따뜻해요)\n최고 온도: 27
- °C / 최저 온도: 24°C\n습도: 75%\n바람: 2 m/s (남실바람 — 
- 잎이 바스락거림) (서남서쪽에서) \n오늘은 🌂 우산 챙
- 기는 게 안전해요 (비올 확률 30%)\n다음 비🌧 : 7월 5일 
- 오후 7시경 비\n\n🙂 오늘 공기는 보통이에요\n미세먼지 
- (PM10): 25.7 ㎍/㎥ (🟢 좋음)\n초미세먼지 (PM2.5): 17.4 ㎍/㎥ 
- (🟡 보통)\n오존(O₃): 0.1 ppm (🟠 나쁨)\n자외선 (오늘 최
- 대): 9.0 (🔴 매우높음)\n\n☀️ 내일은?\n최고 31°C (☀️ 
- 더워요) / 최저 23°C (☀️ 따뜻해요)\n오전: ☀️ 맑음 / 
- 오후: ☀️ 맑음\n\n☀️ 오늘 해는?\n🌅 일출: 오늘 05:16\
- n🌇 일몰: 오늘 19:57\n🌆 시민박명: 오늘 04:44 ~ 오늘 20:28
- \n🌃 천문박명: 오늘 03:23 ~ 오늘 21:50\n\n🌖 달은?\n위상: 
- 하현전 기우는달 (조도 89%)\n🌒 월출: 오늘 22:10\n🌘 월
- 몰: 내일 08:59\n\n🌌 은하수 추적\n🔭 지금 상황: 관측불
- 가 — 아직 충분히 어둡지 않음 (고도 5.5°)\n달 고도: -27.
- 5°\n⏰ 오늘 밤 관측 가능 시간대: 오늘 21:50 ~ 내일 03:23\n
- \n⏱ 시간별 상세\n[20시] ☁️ 흐림 24°C (💧75% 🚩2m/s)\n[2
- 1시] ☁️ 흐림 25°C (💧80% 🚩2m/s)\n[22시] ☁️ 흐림 24°C 
- (💧85% 🚩2m/s)\n[23시] ☁️ 흐림 24°C (💧85% 🚩2m/s)\n\n📊
-  최종 업데이트: 2026-07-03 19:49:57 (KST)
-LOCATION:은계
-END:VEVENT
-BEGIN:VEVENT
 SUMMARY:☀️ 23°C/31°C 🟠🟠
 DTSTART;VALUE=DATE:20260704
 DTEND;VALUE=DATE:20260705
@@ -128,60 +99,60 @@ BEGIN:VEVENT
 SUMMARY:🌧️ 23/29°C
 DTSTART;VALUE=DATE:20260708
 DTEND;VALUE=DATE:20260709
-DTSTAMP:20260703T104957Z
+DTSTAMP:20260703T160057Z
 UID:20260708@mid
 DESCRIPTION:[오전] 🌧️ 흐리고 비 (☔60%)\n[오후] 🌧️ 흐
- 리고 비 (☔60%)\n\n최종 업데이트: 2026-07-03 19:49:57 (KST)
+ 리고 비 (☔60%)\n\n최종 업데이트: 2026-07-04 01:00:57 (KST)
 LOCATION:은계
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:🌧️ 23/28°C
 DTSTART;VALUE=DATE:20260709
 DTEND;VALUE=DATE:20260710
-DTSTAMP:20260703T104957Z
+DTSTAMP:20260703T160057Z
 UID:20260709@mid
 DESCRIPTION:[오전] 🌧️ 흐리고 비 (☔60%)\n[오후] 🌧️ 흐
- 리고 비 (☔60%)\n\n최종 업데이트: 2026-07-03 19:49:57 (KST)
+ 리고 비 (☔60%)\n\n최종 업데이트: 2026-07-04 01:00:57 (KST)
 LOCATION:은계
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:⛅ 23/30°C
 DTSTART;VALUE=DATE:20260710
 DTEND;VALUE=DATE:20260711
-DTSTAMP:20260703T104957Z
+DTSTAMP:20260703T160057Z
 UID:20260710@mid
 DESCRIPTION:[오전] ⛅ 구름많음 (☔30%)\n[오후] ⛅ 구름많음 
- (☔30%)\n\n최종 업데이트: 2026-07-03 19:49:57 (KST)
+ (☔30%)\n\n최종 업데이트: 2026-07-04 01:00:57 (KST)
 LOCATION:은계
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:⛅ 23/32°C
 DTSTART;VALUE=DATE:20260711
 DTEND;VALUE=DATE:20260712
-DTSTAMP:20260703T104957Z
+DTSTAMP:20260703T160057Z
 UID:20260711@mid
 DESCRIPTION:[종일] ⛅ 구름많음 (☔30%)\n\n최종 업데이트: 202
- 6-07-03 19:49:57 (KST)
+ 6-07-04 01:00:57 (KST)
 LOCATION:은계
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:☁️ 24/31°C
 DTSTART;VALUE=DATE:20260712
 DTEND;VALUE=DATE:20260713
-DTSTAMP:20260703T104957Z
+DTSTAMP:20260703T160057Z
 UID:20260712@mid
 DESCRIPTION:[종일] ☁️ 흐림 (☔40%)\n\n최종 업데이트: 2026-0
- 7-03 19:49:57 (KST)
+ 7-04 01:00:57 (KST)
 LOCATION:은계
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:☁️ 24/29°C
 DTSTART;VALUE=DATE:20260713
 DTEND;VALUE=DATE:20260714
-DTSTAMP:20260703T104957Z
+DTSTAMP:20260703T160057Z
 UID:20260713@mid
 DESCRIPTION:[종일] ☁️ 흐림 (☔40%)\n\n최종 업데이트: 2026-0
- 7-03 19:49:57 (KST)
+ 7-04 01:00:57 (KST)
 LOCATION:은계
 END:VEVENT
 END:VCALENDAR
